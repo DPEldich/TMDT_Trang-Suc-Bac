@@ -1,0 +1,47 @@
+@import "open-props/style" layer(open-props);
+@import "@radix-ui/colors/slate.css";
+@import "@radix-ui/colors/indigo.css";
+@import "@radix-ui/colors/red.css";
+@import "@radix-ui/colors/green.css";
+@import "@radix-ui/colors/slate-dark.css";
+@import "@radix-ui/colors/indigo-dark.css";
+@import "@radix-ui/colors/red-dark.css";
+@import "@radix-ui/colors/green-dark.css";
+
+:root,
+.light,
+.dark,
+.light-theme,
+.dark-theme {
+  --bg-canvas: var(--slate-1);
+  --bg-surface: var(--slate-2);
+  --text-primary: var(--slate-12);
+  --text-secondary: var(--slate-11);
+  --border-subtle: var(--slate-6);
+  --accent-primary: var(--indigo-9);
+  --text-danger: var(--red-11);
+  --text-success: var(--green-11);
+
+  --space-xs: var(--size-1);
+  --space-sm: var(--size-2);
+  --space-md: var(--size-3);
+  --space-lg: var(--size-5);
+  --space-xl: var(--size-7);
+
+  --radius-sm: var(--radius-1);
+  --radius-md: var(--radius-2);
+  --radius-lg: var(--radius-3);
+  --shadow-surface: var(--shadow-2);
+  --ease-interaction: var(--ease-out-2);
+}
+
+:root,
+.light,
+.light-theme {
+  color-scheme: light;
+}
+
+.dark,
+.dark-theme {
+  color-scheme: dark;
+}
