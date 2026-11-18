@@ -2,8 +2,8 @@ import { parse } from 'csv-parse/sync';
 import { AUTHENTIC_CUSTOMER_FEEDBACK } from './feedback';
 import type { CustomerFeedback } from '../types/feedback';
 
-const defaultSpreadsheetId = '1vjP-fik-LYgiM-qJ5WKU5_dlaqDp8iHu8tZCp-9XEic';
-const defaultSheetId = '1131662416';
+const defaultSpreadsheetId = '1dDaTKjMiOZKnPY8-7N9Hav_4tcq-iOwG0aqHZzKmamo';
+const defaultSheetId = '1854474379';
 
 export async function getSheetFeedback(): Promise<readonly CustomerFeedback[]> {
   const spreadsheetId = process.env.FEEDBACK_SPREADSHEET_ID?.trim() || defaultSpreadsheetId;

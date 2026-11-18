@@ -2,8 +2,8 @@ import type { CartItem } from '../types/cart';
 import { formatVND } from './currency';
 
 export const DEFAULT_GOOGLE_FORM_URL =
-  'https://docs.google.com/forms/d/e/1FAIpQLSfAddymrcJd_pTVvYxwSR_eEG5hx5zOWTUksHGdEQ_XpibVng/viewform';
-export const DEFAULT_GOOGLE_FORM_ORDER_ENTRY_ID = '1879177736';
+  'https://docs.google.com/forms/d/e/1FAIpQLSeJm7sBbJdrSvG3IoTjtNmK-1yfWD7en8Y0OHCAhymxsxAwiA/viewform';
+export const DEFAULT_GOOGLE_FORM_ORDER_ENTRY_ID = '1911190723';
 
 export interface GoogleFormConfigResult {
   isConfigured: boolean;

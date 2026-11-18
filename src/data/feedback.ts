@@ -1,7 +1,7 @@
 import type { CustomerFeedback } from '../types/feedback';
 
 export const FEEDBACK_FORM_URL =
-  'https://docs.google.com/forms/d/e/1FAIpQLSe_AZyg1CkYO8UdP4N6zv4i-QCQ2U17CuxOG9yBWqF9CriufQ/viewform';
+  'https://docs.google.com/forms/d/e/1FAIpQLScqWukpHtizm-G6Tj9myhrNhSohbA9BfESP1CsvbUlaxDNEVg/viewform';
 
 /**
  * Danh sách đánh giá từ khách hàng.
