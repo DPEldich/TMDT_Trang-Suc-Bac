@@ -1,0 +1,214 @@
+.main {
+  display: flex;
+  flex-direction: column;
+}
+
+.section {
+  padding-top: var(--space-2xl);
+  padding-bottom: var(--space-2xl);
+}
+
+.sectionHeader {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-md);
+  margin-bottom: var(--space-xl);
+}
+
+.headerLeft {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xs);
+}
+
+.sectionSubtitle {
+  font-size: var(--font-size-0);
+  font-weight: var(--font-weight-6);
+  text-transform: uppercase;
+  letter-spacing: var(--font-letterspacing-1);
+  color: var(--text-secondary);
+}
+
+.sectionTitle {
+  font-family: var(--font-display), sans-serif;
+  font-size: var(--font-size-4);
+  font-weight: var(--font-weight-7);
+  color: var(--text-primary);
+  margin-bottom: 0;
+}
+
+.productGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
+}
+
+.categorySection {
+  padding-top: var(--space-2xl);
+  padding-bottom: var(--space-2xl);
+  background-color: var(--bg-surface);
+  border-top: var(--border-size-1) solid var(--border-subtle);
+  border-bottom: var(--border-size-1) solid var(--border-subtle);
+}
+
+.centerHeader {
+  text-align: center;
+  max-width: var(--size-content-3);
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3xs);
+}
+
+.headerDesc {
+  font-size: var(--font-size-1);
+  color: var(--text-secondary);
+  line-height: var(--font-lineheight-3);
+  margin-bottom: 0;
+}
+
+.categoryGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
+}
+
+.categoryCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-lg);
+  background-color: var(--bg-canvas);
+  border: var(--border-size-1) solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  transition: border-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.categoryCard:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-surface);
+  transform: translateY(-0.125rem);
+}
+
+.categoryCardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.categoryCardTitle {
+  font-family: var(--font-display), sans-serif;
+  font-size: var(--font-size-2);
+  font-weight: var(--font-weight-6);
+  color: var(--text-primary);
+  margin-bottom: 0;
+}
+
+.categoryArrow {
+  font-size: var(--font-size-2);
+  color: var(--text-secondary);
+  transition: transform var(--transition-fast);
+}
+
+.categoryCard:hover .categoryArrow {
+  transform: translateX(var(--space-3xs));
+  color: var(--text-primary);
+}
+
+.categoryCardDesc {
+  font-size: var(--font-size-0);
+  color: var(--text-secondary);
+  line-height: var(--font-lineheight-3);
+  margin-bottom: 0;
+}
+
+.categoryExploreText {
+  font-size: var(--font-size-00);
+  font-weight: var(--font-weight-6);
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: var(--font-letterspacing-1);
+  margin-top: auto;
+  padding-top: var(--space-2xs);
+}
+
+.valuesSection {
+  padding-top: var(--space-2xl);
+  padding-bottom: var(--space-2xl);
+}
+
+.valuesGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
+}
+
+.valueCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-lg);
+  background-color: var(--bg-surface);
+  border: var(--border-size-1) solid var(--border-subtle);
+  border-radius: var(--radius-md);
+}
+
+.valueNumber {
+  font-family: var(--font-display), sans-serif;
+  font-size: var(--font-size-3);
+  font-weight: var(--font-weight-7);
+  color: var(--accent-silver);
+  font-variant-numeric: tabular-nums;
+}
+
+.valueTitle {
+  font-family: var(--font-display), sans-serif;
+  font-size: var(--font-size-2);
+  font-weight: var(--font-weight-6);
+  color: var(--text-primary);
+  margin-bottom: 0;
+}
+
+.valueDesc {
+  font-size: var(--font-size-1);
+  line-height: var(--font-lineheight-3);
+  color: var(--text-secondary);
+  margin-bottom: 0;
+}
+
+@media (min-width: 36rem) {
+  .productGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .categoryGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 48rem) {
+  .sectionHeader {
+    flex-direction: row;
+    align-items: flex-end;
+  }
+
+  .valuesGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 60rem) {
+  .productGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .categoryGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

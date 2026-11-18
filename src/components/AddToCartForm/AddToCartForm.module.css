@@ -1,0 +1,181 @@
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  background-color: var(--bg-surface);
+  border: var(--border-size-1) solid var(--border-subtle);
+  border-radius: var(--radius-md);
+}
+
+.stockNotice {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.stockStatus {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+
+.statusDot {
+  width: var(--size-2);
+  height: var(--size-2);
+  border-radius: var(--radius-full);
+}
+
+.statusDot[data-status="available"] {
+  background-color: var(--text-success);
+}
+
+.statusDot[data-status="out"] {
+  background-color: var(--text-danger);
+}
+
+.statusText {
+  font-size: var(--font-size-0);
+  font-weight: var(--font-weight-5);
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.inCartBadge {
+  font-size: var(--font-size-00);
+  color: var(--text-tertiary);
+  font-variant-numeric: tabular-nums;
+}
+
+.controlsRow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.quantityPicker {
+  display: inline-flex;
+  align-items: center;
+  border: var(--border-size-1) solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-canvas);
+  overflow: hidden;
+  height: var(--size-9);
+  width: 100%;
+}
+
+.qtyButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--size-9);
+  height: 100%;
+  border: none;
+  background-color: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.qtyButton:hover:not(:disabled) {
+  background-color: var(--bg-subtle);
+}
+
+.qtyButton:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.qtyIcon {
+  width: var(--size-4);
+  height: var(--size-4);
+  stroke-width: 2;
+}
+
+.qtyInput {
+  flex: 1;
+  width: 100%;
+  text-align: center;
+  border: none;
+  background-color: transparent;
+  color: var(--text-primary);
+  font-size: var(--font-size-2);
+  font-weight: var(--font-weight-6);
+  font-variant-numeric: tabular-nums;
+  -moz-appearance: textfield;
+}
+
+.qtyInput::-webkit-outer-spin-button,
+.qtyInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.submitButton {
+  height: var(--size-9);
+}
+
+.cartIcon {
+  width: var(--size-4);
+  height: var(--size-4);
+  stroke-width: 1.75;
+}
+
+.feedbackBanner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  border: var(--border-size-1) solid transparent;
+  font-size: var(--font-size-0);
+  animation: fadeIn var(--transition-fast);
+}
+
+.feedbackBanner[data-type="success"] {
+  background-color: var(--bg-success-subtle);
+  border-color: var(--border-success);
+  color: var(--text-success);
+}
+
+.feedbackBanner[data-type="error"] {
+  background-color: var(--bg-danger-subtle);
+  border-color: var(--border-danger);
+  color: var(--text-danger);
+}
+
+.feedbackContent {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+
+.feedbackIcon {
+  width: var(--size-4);
+  height: var(--size-4);
+  flex-shrink: 0;
+}
+
+.feedbackMessage {
+  font-weight: var(--font-weight-5);
+  line-height: var(--font-lineheight-2);
+}
+
+.viewCartLink {
+  color: var(--text-primary);
+  font-weight: var(--font-weight-6);
+  text-decoration: underline;
+  text-underline-offset: var(--space-3xs);
+  margin-left: calc(var(--size-4) + var(--space-2xs));
+}
+
+@media (min-width: 32rem) {
+  .controlsRow {
+    flex-direction: row;
+  }
+
+  .quantityPicker {
+    width: var(--size-14);
+    flex-shrink: 0;
+  }
+}

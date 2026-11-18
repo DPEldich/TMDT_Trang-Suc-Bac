@@ -1,0 +1,102 @@
+.heroSection {
+  padding-top: var(--space-2xl);
+  padding-bottom: var(--space-2xl);
+  background-color: var(--bg-canvas);
+  border-bottom: var(--border-size-1) solid var(--border-subtle);
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  gap: var(--space-xl);
+}
+
+.contentCol {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  max-width: var(--size-content-3);
+}
+
+.heading {
+  font-family: var(--font-display), sans-serif;
+  font-size: var(--font-size-5);
+  font-weight: var(--font-weight-7);
+  letter-spacing: var(--font-letterspacing-1);
+  line-height: var(--font-lineheight-1);
+  color: var(--text-primary);
+  margin-bottom: 0;
+}
+
+.description {
+  font-size: var(--font-size-2);
+  line-height: var(--font-lineheight-3);
+  color: var(--text-secondary);
+  margin-bottom: 0;
+}
+
+.actionGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding-top: var(--space-xs);
+}
+
+.visualCol {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.imageCard {
+  width: 100%;
+  max-width: var(--size-14);
+  background-color: var(--bg-surface);
+  border: var(--border-size-1) solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: var(--shadow-surface);
+}
+
+.imageWrapper {
+  width: 100%;
+  aspect-ratio: var(--product-image-ratio);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-canvas);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.heroImage {
+  width: 85%;
+  height: 85%;
+  object-fit: contain;
+  transition: transform var(--transition-normal);
+}
+
+.imageCard:hover .heroImage {
+  transform: scale(1.03);
+}
+
+@media (min-width: 48rem) {
+  .heroSection {
+    padding-top: var(--space-3xl);
+    padding-bottom: var(--space-3xl);
+  }
+
+  .container {
+    grid-template-columns: 1.2fr 1fr;
+    gap: var(--space-2xl);
+  }
+
+  .heading {
+    font-size: var(--font-size-6);
+  }
+}

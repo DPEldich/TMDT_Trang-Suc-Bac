@@ -1,0 +1,19 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.resultsInfo {
+  margin-bottom: var(--space-md);
+  font-size: var(--font-size-1);
+  color: var(--text-secondary);
+}
+
+.resultsCount {
+  font-variant-numeric: tabular-nums;
+}
+
+.bold {
+  color: var(--text-primary);
+  font-weight: var(--font-weight-6);
+}

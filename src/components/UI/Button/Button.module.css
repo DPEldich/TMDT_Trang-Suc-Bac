@@ -1,0 +1,103 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2xs);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-weight: var(--font-weight-5);
+  line-height: var(--font-lineheight-1);
+  text-decoration: none;
+  cursor: pointer;
+  border: var(--border-size-1) solid transparent;
+  border-radius: var(--radius-sm);
+  transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), opacity var(--transition-fast);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Sizes */
+.sm {
+  font-size: var(--font-size-0);
+  padding: var(--space-3xs) var(--space-xs);
+  min-height: var(--size-7);
+}
+
+.md {
+  font-size: var(--font-size-1);
+  padding: var(--space-2xs) var(--space-sm);
+  min-height: var(--size-8);
+}
+
+.lg {
+  font-size: var(--font-size-2);
+  padding: var(--space-xs) var(--space-md);
+  min-height: var(--size-9);
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+/* Variants */
+.primary {
+  background-color: var(--accent-primary);
+  color: var(--accent-primary-contrast);
+  border-color: var(--accent-primary);
+}
+
+.primary:hover:not(:disabled) {
+  background-color: var(--accent-primary-hover);
+  border-color: var(--accent-primary-hover);
+}
+
+.primary:active:not(:disabled) {
+  opacity: 0.9;
+}
+
+.secondary {
+  background-color: var(--bg-subtle);
+  color: var(--text-primary);
+  border-color: var(--border-subtle);
+}
+
+.secondary:hover:not(:disabled) {
+  background-color: var(--bg-muted);
+  border-color: var(--border-strong);
+}
+
+.outline {
+  background-color: transparent;
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+
+.outline:hover:not(:disabled) {
+  background-color: var(--bg-subtle);
+}
+
+.ghost {
+  background-color: transparent;
+  color: var(--text-secondary);
+  border-color: transparent;
+}
+
+.ghost:hover:not(:disabled) {
+  color: var(--text-primary);
+  background-color: var(--bg-subtle);
+}
+
+.danger {
+  background-color: var(--bg-danger-subtle);
+  color: var(--text-danger);
+  border-color: var(--border-danger);
+}
+
+.danger:hover:not(:disabled) {
+  opacity: 0.9;
+}

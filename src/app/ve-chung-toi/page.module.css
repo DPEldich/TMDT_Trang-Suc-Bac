@@ -1,0 +1,188 @@
+.main {
+  display: flex;
+  flex-direction: column;
+}
+
+.pageHeader {
+  padding-top: var(--space-xl);
+  padding-bottom: var(--space-2xl);
+  background-color: var(--bg-surface);
+  border-bottom: var(--border-size-1) solid var(--border-subtle);
+}
+
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  font-size: var(--font-size-0);
+  margin-bottom: var(--space-sm);
+  color: var(--text-tertiary);
+}
+
+.crumbLink {
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.crumbLink:hover {
+  color: var(--text-primary);
+}
+
+.crumbSeparator {
+  color: var(--text-tertiary);
+}
+
+.crumbCurrent {
+  color: var(--text-primary);
+  font-weight: var(--font-weight-5);
+}
+
+.pageTitle {
+  font-family: var(--font-display), sans-serif;
+  font-size: var(--font-size-4);
+  font-weight: var(--font-weight-7);
+  color: var(--text-primary);
+  margin-bottom: var(--space-xs);
+}
+
+.pageDescription {
+  font-size: var(--font-size-1);
+  color: var(--text-secondary);
+  line-height: var(--font-lineheight-3);
+  max-width: var(--size-content-3);
+  margin-bottom: 0;
+}
+
+.contentContainer {
+  padding-top: var(--space-2xl);
+  padding-bottom: var(--space-3xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xl);
+}
+
+.teamSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.sectionHeader {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xs);
+}
+
+.teamBadgeRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+
+.teamIcon {
+  width: var(--size-4);
+  height: var(--size-4);
+  color: var(--accent-silver);
+}
+
+.sectionSubtitle {
+  font-size: var(--font-size-0);
+  font-weight: var(--font-weight-6);
+  text-transform: uppercase;
+  letter-spacing: var(--font-letterspacing-1);
+  color: var(--text-secondary);
+}
+
+.sectionTitle {
+  font-family: var(--font-display), sans-serif;
+  font-size: var(--font-size-3);
+  font-weight: var(--font-weight-7);
+  color: var(--text-primary);
+  margin-bottom: 0;
+}
+
+.teamIntro {
+  font-size: var(--font-size-1);
+  color: var(--text-secondary);
+  margin-bottom: 0;
+  max-width: var(--size-content-3);
+}
+
+.membersGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
+}
+
+.memberCard {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  background-color: var(--bg-surface);
+  border: var(--border-size-1) solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.memberCard:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-surface);
+}
+
+.memberOrder {
+  font-family: var(--font-display), sans-serif;
+  font-size: var(--font-size-3);
+  font-weight: var(--font-weight-7);
+  color: var(--accent-silver);
+  line-height: var(--font-lineheight-1);
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+.memberDetails {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xs);
+  flex: 1;
+}
+
+.memberName {
+  font-family: var(--font-display), sans-serif;
+  font-size: var(--font-size-2);
+  font-weight: var(--font-weight-6);
+  color: var(--text-primary);
+  margin-bottom: 0;
+}
+
+.memberMeta {
+  display: flex;
+  align-items: center;
+}
+
+.mssvBadge {
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-0);
+  font-weight: var(--font-weight-6);
+  color: var(--text-primary);
+  background-color: var(--bg-subtle);
+  padding: var(--space-3xs) var(--space-2xs);
+  border-radius: var(--radius-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (min-width: 48rem) {
+  .pageHeader {
+    padding-top: var(--space-2xl);
+  }
+
+  .pageTitle {
+    font-size: var(--font-size-5);
+  }
+
+  .membersGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-lg);
+  }
+}

@@ -1,38 +1,101 @@
 @import "open-props/style" layer(open-props);
 @import "@radix-ui/colors/slate.css";
+@import "@radix-ui/colors/sand.css";
+@import "@radix-ui/colors/gray.css";
 @import "@radix-ui/colors/indigo.css";
 @import "@radix-ui/colors/red.css";
 @import "@radix-ui/colors/green.css";
+@import "@radix-ui/colors/amber.css";
 @import "@radix-ui/colors/slate-dark.css";
+@import "@radix-ui/colors/sand-dark.css";
+@import "@radix-ui/colors/gray-dark.css";
 @import "@radix-ui/colors/indigo-dark.css";
 @import "@radix-ui/colors/red-dark.css";
 @import "@radix-ui/colors/green-dark.css";
+@import "@radix-ui/colors/amber-dark.css";
 
 :root,
 .light,
 .dark,
 .light-theme,
 .dark-theme {
-  --bg-canvas: var(--slate-1);
-  --bg-surface: var(--slate-2);
-  --text-primary: var(--slate-12);
-  --text-secondary: var(--slate-11);
-  --border-subtle: var(--slate-6);
-  --accent-primary: var(--indigo-9);
-  --text-danger: var(--red-11);
-  --text-success: var(--green-11);
+  /* Surface and Background - Warm Ivory / Contemporary Minimalist Palette */
+  --bg-canvas: var(--sand-1);
+  --bg-surface: var(--sand-2);
+  --bg-surface-elevated: var(--sand-1);
+  --bg-subtle: var(--sand-3);
+  --bg-muted: var(--sand-4);
+  --bg-card: var(--sand-2);
+  --bg-card-hover: var(--sand-3);
+  --bg-badge: var(--sand-3);
 
-  --space-xs: var(--size-1);
-  --space-sm: var(--size-2);
-  --space-md: var(--size-3);
+  /* Typography / Text - Deep Charcoal & Muted Slate */
+  --text-primary: var(--sand-12);
+  --text-secondary: var(--sand-11);
+  --text-tertiary: var(--sand-10);
+  --text-muted: var(--sand-9);
+  --text-inverse: var(--sand-1);
+
+  /* Brand Accents - Understated Charcoal and Muted Silver */
+  --accent-primary: var(--sand-12);
+  --accent-primary-hover: var(--sand-11);
+  --accent-primary-contrast: var(--sand-1);
+  --accent-silver: var(--slate-8);
+  --accent-silver-light: var(--slate-4);
+  --accent-silver-subtle: var(--slate-3);
+
+  /* Borders & Dividers */
+  --border-subtle: var(--sand-6);
+  --border-card: var(--sand-5);
+  --border-strong: var(--sand-8);
+  --border-focus: var(--sand-12);
+
+  /* Feedback & State */
+  --text-danger: var(--red-11);
+  --bg-danger-subtle: var(--red-2);
+  --border-danger: var(--red-6);
+
+  --text-success: var(--green-11);
+  --bg-success-subtle: var(--green-2);
+  --border-success: var(--green-6);
+
+  --text-warning: var(--amber-11);
+  --bg-warning-subtle: var(--amber-2);
+  --border-warning: var(--amber-6);
+
+  /* Spacing Scale (Open Props mapped to semantic names) */
+  --space-3xs: var(--size-1);
+  --space-2xs: var(--size-2);
+  --space-xs: var(--size-2);
+  --space-sm: var(--size-3);
+  --space-md: var(--size-4);
   --space-lg: var(--size-5);
   --space-xl: var(--size-7);
+  --space-2xl: var(--size-9);
+  --space-3xl: var(--size-11);
 
-  --radius-sm: var(--radius-1);
-  --radius-md: var(--radius-2);
-  --radius-lg: var(--radius-3);
+  /* Border Radii */
+  --radius-xs: var(--radius-1);
+  --radius-sm: var(--radius-2);
+  --radius-md: var(--radius-3);
+  --radius-lg: var(--radius-4);
+  --radius-full: var(--radius-round);
+
+  /* Shadows */
+  --shadow-subtle: var(--shadow-1);
   --shadow-surface: var(--shadow-2);
+  --shadow-card-hover: var(--shadow-3);
+
+  /* Motion & Easing */
   --ease-interaction: var(--ease-out-2);
+  --transition-fast: 150ms var(--ease-interaction);
+  --transition-normal: 250ms var(--ease-interaction);
+
+  /* Layout dimensions */
+  --layout-max-width: 72rem;
+  --layout-narrow-width: 48rem;
+  --layout-header-height: 4.5rem;
+  --product-image-ratio: 1 / 1;
 }
 
 :root,
