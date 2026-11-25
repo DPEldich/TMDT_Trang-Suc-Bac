@@ -2,7 +2,9 @@
   padding-top: var(--space-2xl);
   padding-bottom: var(--space-2xl);
   background-color: var(--bg-surface);
+  background-image: var(--feedback-section-ambient);
   border-top: var(--border-size-1) solid var(--border-hairline);
+  overflow-x: clip;
 }
 
 .header {
@@ -10,14 +12,16 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: space-between;
-  gap: var(--space-md);
+  gap: var(--space-sm);
   margin-bottom: var(--space-lg);
+  min-width: 0;
 }
 
 .headerCopy {
   display: flex;
   flex-direction: column;
   gap: var(--space-3xs);
+  min-width: 0;
 }
 
 .heading {
@@ -30,15 +34,30 @@
   margin-bottom: 0;
 }
 
-.feedbackLink {
+.headerActions {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: var(--space-2xs);
+  max-width: 100%;
+  min-width: 0;
   flex-shrink: 0;
 }
 
-.externalIcon {
-  width: var(--icon-sm);
-  height: var(--icon-sm);
+.headerActions .feedbackLink {
+  flex-shrink: 0;
+  white-space: nowrap;
+  font-size: var(--text-caption);
+  padding: var(--space-2xs) var(--space-xs);
 }
 
+.externalIcon {
+  width: var(--icon-xs);
+  height: var(--icon-xs);
+  flex-shrink: 0;
+}
+
+/* Loading & Empty State */
 .emptyCard {
   padding: var(--space-xl) var(--space-md);
   background-color: var(--bg-card);
@@ -75,37 +94,181 @@
   margin-bottom: 0;
 }
 
+/* Ticker Root & Header Reader Control (always outside moving viewport) */
+.tickerRoot {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.readerToggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2xs);
+  min-height: var(--tap-target);
+  padding: var(--space-2xs) var(--space-xs);
+  border-radius: var(--radius-full);
+  border: var(--border-size-1) solid var(--feedback-toggle-border);
+  background-color: var(--feedback-toggle-bg);
+  color: var(--text-primary);
+  font-size: var(--text-caption);
+  font-weight: var(--font-weight-5);
+  line-height: var(--leading-snug);
+  white-space: nowrap;
+  cursor: pointer;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-store-glass-cue);
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.readerToggle[data-state='reader'] {
+  background-color: var(--feedback-toggle-active-bg);
+  border-color: var(--feedback-toggle-active-bg);
+  color: var(--feedback-toggle-active-text);
+}
+
+.readerToggle:focus-visible {
+  outline: var(--border-size-2) solid var(--border-focus);
+  outline-offset: var(--outline-offset-focus);
+}
+
+.readerToggle:active {
+  transform: scale(var(--scale-press));
+}
+
+.toggleIcon {
+  width: var(--icon-xs);
+  height: var(--icon-xs);
+  flex-shrink: 0;
+}
+
+/* Transparent Stage Blending Into Native Section Background */
+.stageShell {
+  position: relative;
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  min-width: 0;
+}
+
+/* Masked Multi-Column Vertical Ticker Viewport */
+.tickerViewport {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--feedback-lane-gap-mobile);
+  height: var(--feedback-viewport-height-mobile);
+  padding-inline: var(--feedback-stage-bleed);
+  overflow: hidden;
+  min-width: 0;
+  -webkit-mask-image: var(--feedback-viewport-mask);
+  mask-image: var(--feedback-viewport-mask);
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+.tickerViewport[data-columns='2'] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.tickerViewport[data-columns='3'] {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.tickerViewport[data-columns='5'] {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.tickerLane {
+  position: relative;
+  height: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.tickerTrack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--feedback-lane-gap-mobile);
+  min-width: 0;
+  will-change: transform;
+}
+
+.tickerGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--feedback-lane-gap-mobile);
+  flex-shrink: 0;
+  min-width: 0;
+}
+
+/* Static Grid (< 5 reviews, SSR fallback, reduced motion, and Đọc đánh giá reader mode) */
 .feedbackGrid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   align-items: start;
-  gap: var(--space-md);
+  gap: var(--space-sm);
+  min-width: 0;
 }
 
-.feedbackGrid[data-count='single'] {
+.feedbackGrid[data-count='1'] {
   max-width: var(--feedback-single-width);
 }
 
+/* Distinct Softly Frosted Liquid Glass Portrait Review Card */
 .reviewCard {
+  position: relative;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
   min-width: 0;
-  padding: var(--space-md);
-  background-color: var(--bg-store-glass);
-  border: var(--border-size-1) solid var(--border-store-glass);
-  -webkit-backdrop-filter: blur(var(--blur-store-glass));
-  backdrop-filter: blur(var(--blur-store-glass));
+  padding: var(--space-md) var(--space-sm);
+  background-color: var(--feedback-card-bg);
+  background-image: var(--feedback-card-sheen);
+  border: var(--border-size-1) solid var(--feedback-card-border);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-store-glass);
+  box-shadow: var(--feedback-card-shadow);
+  -webkit-backdrop-filter: blur(var(--feedback-card-blur))
+    saturate(var(--feedback-card-saturation));
+  backdrop-filter: blur(var(--feedback-card-blur))
+    saturate(var(--feedback-card-saturation));
+}
+
+.reviewCard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: var(--feedback-card-rim-sheen);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.reviewCardTicker {
+  min-height: var(--feedback-card-min-height-mobile-1);
+}
+
+.reviewCardStatic {
+  min-height: var(--feedback-card-static-min-height);
 }
 
 .reviewHeader {
+  position: relative;
+  z-index: 1;
   display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--space-3xs) var(--space-sm);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3xs);
+  padding-bottom: var(--space-xs);
+  border-bottom: var(--border-size-1) solid var(--feedback-card-divider);
   min-width: 0;
 }
 
@@ -130,7 +293,9 @@
 }
 
 .reviewContent {
-  font-size: var(--text-body);
+  position: relative;
+  z-index: 1;
+  font-size: var(--feedback-card-body-size);
   line-height: var(--leading-body);
   color: var(--text-primary);
   margin-bottom: 0;
@@ -138,6 +303,49 @@
   overflow-wrap: anywhere;
 }
 
+@media (hover: hover) and (pointer: fine) {
+  .readerToggle:hover {
+    background-color: var(--feedback-toggle-bg-hover);
+    border-color: var(--border-strong);
+    transform: translateY(var(--lift-button));
+  }
+
+  .readerToggle[data-state='reader']:hover {
+    background-color: var(--accent-primary);
+    border-color: var(--accent-primary);
+    color: var(--accent-primary-contrast);
+  }
+}
+
+/* Mobile 2-column breakpoint (384px+ / 390px) */
+@media (min-width: 24rem) {
+  .headerActions {
+    gap: var(--space-xs);
+  }
+
+  .headerActions .feedbackLink,
+  .readerToggle {
+    font-size: var(--text-small);
+    padding: var(--space-2xs) var(--space-sm);
+  }
+
+  .externalIcon,
+  .toggleIcon {
+    width: var(--icon-sm);
+    height: var(--icon-sm);
+  }
+
+  .reviewCardTicker {
+    min-height: var(--feedback-card-min-height-mobile-2);
+    padding: var(--space-sm);
+  }
+
+  .reviewCardTicker .reviewContent {
+    font-size: var(--feedback-card-body-size-compact);
+  }
+}
+
+/* Tablet breakpoint (768px+, 3 ticker columns, controls beside heading) */
 @media (min-width: 48rem) {
   .section {
     padding-top: var(--space-3xl);
@@ -147,16 +355,108 @@
   .header {
     flex-direction: row;
     align-items: flex-end;
+    gap: var(--space-md);
     margin-bottom: var(--space-xl);
   }
 
+  .headerActions .feedbackLink,
+  .readerToggle {
+    padding: var(--space-2xs) var(--space-md);
+  }
+
+  .tickerViewport {
+    gap: var(--feedback-lane-gap-tablet);
+    height: var(--feedback-viewport-height-tablet);
+  }
+
+  .tickerTrack,
+  .tickerGroup {
+    gap: var(--feedback-lane-gap-tablet);
+  }
+
+  .reviewCardTicker {
+    min-height: var(--feedback-card-min-height-tablet);
+    padding: var(--space-md) var(--space-sm);
+  }
+
+  .reviewCardTicker .reviewContent {
+    font-size: var(--feedback-card-body-size);
+  }
+
+  .feedbackGrid[data-count='2'],
+  .feedbackGrid[data-count='3'],
+  .feedbackGrid[data-count='4'],
   .feedbackGrid[data-count='multiple'] {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-md);
   }
 }
 
+/* Desktop breakpoint (1024px+, 5 ticker columns) */
 @media (min-width: 64rem) {
+  .tickerViewport {
+    gap: var(--feedback-lane-gap-desktop);
+    height: var(--feedback-viewport-height-desktop);
+  }
+
+  .tickerTrack,
+  .tickerGroup {
+    gap: var(--feedback-lane-gap-desktop);
+  }
+
+  .reviewCardTicker {
+    min-height: var(--feedback-card-min-height-desktop);
+    padding: var(--space-sm);
+  }
+
+  .reviewCardTicker .reviewContent {
+    font-size: var(--feedback-card-body-size-compact);
+  }
+
+  .feedbackGrid[data-count='3'],
   .feedbackGrid[data-count='multiple'] {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .feedbackGrid[data-count='4'] {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* Wide desktop (1200px+ / 1440px, roomy 5 ticker columns) */
+@media (min-width: 75rem) {
+  .tickerViewport {
+    gap: var(--feedback-lane-gap-wide);
+  }
+
+  .tickerTrack,
+  .tickerGroup {
+    gap: var(--feedback-lane-gap-wide);
+  }
+
+  .reviewCardTicker {
+    min-height: var(--feedback-card-min-height-wide);
+    padding: var(--space-md) var(--space-sm);
+  }
+
+  .reviewCardTicker .reviewContent {
+    font-size: var(--feedback-card-body-size);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  .reviewCard::before {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .readerToggle {
+    transition: none;
+  }
+
+  .readerToggle:hover,
+  .readerToggle:active {
+    transform: none;
   }
 }

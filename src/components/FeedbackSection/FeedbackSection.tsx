@@ -1,8 +1,10 @@
-import { ExternalLink, MessageSquareQuote } from 'lucide-react';
-import { FEEDBACK_FORM_URL } from '../../data/feedback';
+import { MessageSquareQuote } from 'lucide-react';
 import type { CustomerFeedback } from '../../types/feedback';
-import { LinkButton } from '../UI/Button';
 import { Container } from '../UI/Container';
+import { FeedbackHeader } from './FeedbackHeader';
+import { FeedbackTicker } from './FeedbackTicker';
+import { MIN_TICKER_REVIEWS } from './feedbackTickerLayout';
+import { ReviewCard } from './ReviewCard';
 import styles from './FeedbackSection.module.css';
 
 export interface FeedbackSectionProps {
@@ -15,70 +17,55 @@ export function FeedbackSection({
   loading = false,
 }: FeedbackSectionProps) {
   const hasFeedback = feedbacks.length > 0;
+  const shouldUseTicker = feedbacks.length >= MIN_TICKER_REVIEWS;
 
   return (
     <section className={styles.section} aria-labelledby="feedback-heading">
       <Container>
-        <div className={styles.header}>
-          <div className={styles.headerCopy}>
-            <h2 id="feedback-heading" className={styles.heading}>
-              Đánh giá từ khách hàng
-            </h2>
-          </div>
-
-          <LinkButton
-            href={FEEDBACK_FORM_URL}
-            variant="outline"
-            size="md"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.feedbackLink}
-          >
-            <span>Gửi đánh giá</span>
-            <ExternalLink className={styles.externalIcon} aria-hidden="true" />
-          </LinkButton>
-        </div>
-
         {!hasFeedback ? (
-          <div
-            className={styles.emptyCard}
-            role="status"
-            aria-busy={loading ? 'true' : undefined}
-          >
-            <div className={styles.emptyIconCircle}>
-              <MessageSquareQuote
-                className={styles.emptyIcon}
-                aria-hidden="true"
-              />
+          <>
+            <FeedbackHeader />
+            <div
+              className={styles.emptyCard}
+              role="status"
+              aria-busy={loading ? 'true' : undefined}
+            >
+              <div className={styles.emptyIconCircle}>
+                <MessageSquareQuote
+                  className={styles.emptyIcon}
+                  aria-hidden="true"
+                />
+              </div>
+              <h3 className={styles.emptyTitle}>
+                {loading ? 'Đang tải đánh giá' : 'Chưa có đánh giá nào'}
+              </h3>
             </div>
-            <h3 className={styles.emptyTitle}>
-              {loading ? 'Đang tải đánh giá' : 'Chưa có đánh giá nào'}
-            </h3>
-          </div>
+          </>
+        ) : shouldUseTicker ? (
+          <FeedbackTicker feedbacks={feedbacks} />
         ) : (
-          <div
-            className={styles.feedbackGrid}
-            data-count={feedbacks.length === 1 ? 'single' : 'multiple'}
-          >
-            {feedbacks.map((feedback) => {
-              const hasDate = Boolean(feedback.date?.trim());
-
-              return (
-                <article key={feedback.id} className={styles.reviewCard}>
-                  <div className={styles.reviewHeader}>
-                    <strong className={styles.authorName}>
-                      {feedback.authorName}
-                    </strong>
-                    {hasDate && (
-                      <span className={styles.authorDate}>{feedback.date}</span>
-                    )}
-                  </div>
-
-                  <p className={styles.reviewContent}>{feedback.content}</p>
-                </article>
-              );
-            })}
-          </div>
+          <>
+            <FeedbackHeader />
+            <div
+              className={styles.stageShell}
+              data-feedback-mode="static-under-threshold"
+              data-feedback-count={feedbacks.length}
+            >
+              <div
+                className={styles.feedbackGrid}
+                data-feedback-static-grid="true"
+                data-count={String(feedbacks.length)}
+              >
+                {feedbacks.map((feedback) => (
+                  <ReviewCard
+                    key={feedback.id}
+                    feedback={feedback}
+                    variant="static"
+                  />
+                ))}
+              </div>
+            </div>
+          </>
         )}
       </Container>
     </section>

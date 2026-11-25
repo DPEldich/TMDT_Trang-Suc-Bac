@@ -433,6 +433,83 @@
   --hero-message-title-size: clamp(1.125rem, 1.02rem + 0.42vw, 1.4375rem);
   --hero-message-body-size: clamp(0.9375rem, 0.9rem + 0.16vw, 1.0625rem);
   --hero-scramble-glyph-color: var(--slate-10);
+
+  /* Customer Feedback Liquid Glass & Vertical Ticker Tokens (Additive) */
+  --feedback-section-ambient:
+    radial-gradient(
+      ellipse 78% 58% at 18% 36%,
+      color-mix(in srgb, var(--blue-3) 44%, transparent) 0%,
+      transparent 72%
+    ),
+    radial-gradient(
+      ellipse 72% 60% at 84% 68%,
+      color-mix(in srgb, var(--slate-4) 48%, transparent) 0%,
+      transparent 74%
+    ),
+    radial-gradient(
+      ellipse 60% 50% at 50% 52%,
+      color-mix(in srgb, var(--slate-1) 42%, transparent) 0%,
+      transparent 78%
+    );
+  --feedback-stage-bleed: var(--space-3xs);
+
+  --feedback-card-bg: color-mix(in srgb, var(--slate-1) 78%, transparent);
+  --feedback-card-sheen: linear-gradient(
+    152deg,
+    var(--white-a12) 0%,
+    var(--white-a6) 28%,
+    transparent 58%,
+    var(--white-a5) 100%
+  );
+  --feedback-card-rim-sheen: linear-gradient(
+    180deg,
+    var(--white-a12) 0%,
+    var(--white-a4) 18%,
+    transparent 44%
+  );
+  --feedback-card-border: color-mix(in srgb, var(--white-a11) 58%, var(--slate-6));
+  --feedback-card-divider: var(--gray-a4);
+  --feedback-card-blur: 1.125rem;
+  --feedback-card-saturation: 1.25;
+  --feedback-card-shadow:
+    inset 0 0.0625rem 0 var(--white-a12),
+    inset 0 -0.0625rem 0 var(--gray-a3),
+    0 0.5rem 1.5rem -0.625rem var(--gray-a5),
+    0 0.125rem 0.4375rem -0.0625rem var(--gray-a3);
+  --feedback-card-min-height-mobile-1: 18.5rem;
+  --feedback-card-min-height-mobile-2: 14.5rem;
+  --feedback-card-min-height-tablet: 16.5rem;
+  --feedback-card-min-height-desktop: 14.75rem;
+  --feedback-card-min-height-wide: 16.5rem;
+  --feedback-card-static-min-height: 14.5rem;
+  --feedback-card-body-size-compact: 0.90625rem;
+  --feedback-card-body-size: 0.9375rem;
+
+  --feedback-viewport-height-mobile: 32rem;
+  --feedback-viewport-height-tablet: 35rem;
+  --feedback-viewport-height-desktop: 37.5rem;
+  --feedback-lane-gap-mobile: 0.625rem;
+  --feedback-lane-gap-tablet: 0.75rem;
+  --feedback-lane-gap-desktop: 0.75rem;
+  --feedback-lane-gap-wide: 0.875rem;
+
+  --feedback-viewport-mask: linear-gradient(
+    180deg,
+    rgb(0 0 0 / 0.04) 0%,
+    rgb(0 0 0 / 0.24) 6%,
+    rgb(0 0 0 / 0.72) 13%,
+    rgb(0 0 0 / 1) 18%,
+    rgb(0 0 0 / 1) 82%,
+    rgb(0 0 0 / 0.72) 87%,
+    rgb(0 0 0 / 0.24) 94%,
+    rgb(0 0 0 / 0.04) 100%
+  );
+
+  --feedback-toggle-bg: color-mix(in srgb, var(--slate-1) 82%, transparent);
+  --feedback-toggle-bg-hover: var(--slate-1);
+  --feedback-toggle-border: var(--border-subtle);
+  --feedback-toggle-active-bg: var(--text-primary);
+  --feedback-toggle-active-text: var(--text-inverse);
 }
 
 :root,
@@ -452,6 +529,12 @@
     --bg-store-glass-midnight: var(--bg-panel-midnight);
     --bg-store-glass-champagne: var(--bg-panel-champagne);
     --bg-store-glass-mist: var(--bg-panel-silver-mist);
+    --feedback-card-bg: var(--slate-1);
+    --feedback-card-border: var(--border-subtle);
+    --feedback-card-blur: 0rem;
+    --feedback-card-saturation: 1;
+    --feedback-card-sheen: none;
+    --feedback-toggle-bg: var(--slate-1);
   }
 }
 
@@ -463,5 +546,28 @@
     --bg-store-glass-mist: var(--bg-panel-silver-mist);
     --blur-store-glass: 0rem;
     --saturation-store-glass: 1;
+    --feedback-section-ambient: none;
+    --feedback-card-bg: var(--slate-1);
+    --feedback-card-border: var(--border-subtle);
+    --feedback-card-blur: 0rem;
+    --feedback-card-saturation: 1;
+    --feedback-card-sheen: none;
+    --feedback-card-rim-sheen: none;
+    --feedback-toggle-bg: var(--slate-1);
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --feedback-section-ambient: none;
+    --feedback-card-bg: var(--slate-1);
+    --feedback-card-border: var(--border-strong);
+    --feedback-card-divider: var(--border-strong);
+    --feedback-card-blur: 0rem;
+    --feedback-card-saturation: 1;
+    --feedback-card-sheen: none;
+    --feedback-card-rim-sheen: none;
+    --feedback-toggle-bg: var(--slate-1);
+    --feedback-toggle-border: var(--border-strong);
   }
 }
