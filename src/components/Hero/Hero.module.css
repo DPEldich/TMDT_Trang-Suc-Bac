@@ -14,35 +14,34 @@
 }
 
 .backdrop {
-  --hero-zoom-scale-max: var(--hero-zoom-scale-max-mobile);
   position: absolute;
   inset: 0;
   z-index: var(--z-hero-backdrop);
-  background-image: url('../../../asset/A1.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  transform-origin: center center;
+  overflow: hidden;
   pointer-events: none;
 }
 
-.backdrop[data-state='active'] {
-  transform: scale(
-    calc(
-      1 +
-        (var(--hero-zoom-scale-max) - 1) *
-        var(--hero-zoom-scale-progress, 0)
-    )
-  );
-  filter: blur(
-    calc(var(--hero-zoom-blur-max) * var(--hero-zoom-blur-progress, 0))
-  );
-  opacity: calc(
-    1 -
-      (1 - var(--hero-zoom-opacity-min)) *
-      var(--hero-zoom-fade-progress, 0)
-  );
-  will-change: transform, filter, opacity;
+.backdropStatic {
+  position: absolute;
+  inset: 0;
+  background-image: url('../../../asset/Background.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.backdropCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: 0;
+  transition: opacity var(--hero-backdrop-fade-duration) var(--ease-enter);
+}
+
+.backdropCanvas[data-visible='true'] {
+  opacity: 1;
 }
 
 .copyWash {
@@ -120,19 +119,11 @@
   .heroSection {
     padding-block-start: var(--hero-padding-top-desktop);
   }
-
-  .backdrop {
-    --hero-zoom-scale-max: var(--hero-zoom-scale-max-desktop);
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .backdrop,
-  .backdrop[data-state='active'] {
-    transform: none;
-    filter: none;
-    opacity: 1;
-    will-change: auto;
+  .backdropCanvas {
+    transition: none;
   }
 
   .heading,
@@ -140,16 +131,6 @@
     animation: none;
     opacity: 1;
     transform: none;
-  }
-}
-
-@media (forced-colors: active) {
-  .backdrop,
-  .backdrop[data-state='active'] {
-    transform: none;
-    filter: none;
-    opacity: 1;
-    will-change: auto;
   }
 }
 

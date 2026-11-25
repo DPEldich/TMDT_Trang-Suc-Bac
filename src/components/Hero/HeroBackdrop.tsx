@@ -3,11 +3,18 @@
 import {
   useEffect,
   useRef,
+  useState,
   useSyncExternalStore,
   type ComponentPropsWithoutRef,
 } from 'react';
 import clsx from 'clsx';
-import { scroll } from 'motion/react';
+import heroBackdropAsset from '../../../asset/Background.png';
+import {
+  createHeroBackdropRenderer,
+  resolveBackdropPlaybackState,
+  type HeroBackdropRendererHandle,
+  type HeroBackdropRendererStatus,
+} from './heroBackdropRenderer';
 import styles from './Hero.module.css';
 
 export type HeroBackdropProps = Omit<
@@ -16,9 +23,6 @@ export type HeroBackdropProps = Omit<
 >;
 
 const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)';
-const PROGRESS_EDGE_EPSILON = 0.001;
-const MIN_SCROLLABLE_RANGE_PX = 1;
-const FADE_CURVE_EXPONENT = 1.5;
 
 function subscribeReducedMotion(onStoreChange: () => void): () => void {
   if (
@@ -46,157 +50,143 @@ function getReducedMotionSnapshot(): boolean {
   return window.matchMedia(REDUCED_MOTION_QUERY).matches;
 }
 
-function useLiveReducedMotion(): boolean {
-  return useSyncExternalStore(
-    subscribeReducedMotion,
-    getReducedMotionSnapshot,
-    () => false
-  );
+function getServerFalseSnapshot(): boolean {
+  return false;
 }
 
-function clampProgress(value: number): number {
-  if (!Number.isFinite(value) || value <= PROGRESS_EDGE_EPSILON) return 0;
-  if (value >= 1 - PROGRESS_EDGE_EPSILON) return 1;
-  return value;
+function subscribeDocumentVisibility(onStoreChange: () => void): () => void {
+  if (typeof document === 'undefined') return () => {};
+  document.addEventListener('visibilitychange', onStoreChange);
+  return () => {
+    document.removeEventListener('visibilitychange', onStoreChange);
+  };
 }
 
-function readHeroScrollProgress(hero: HTMLElement): number {
-  const viewportHeight =
-    document.documentElement.clientHeight || window.innerHeight;
-  const maxScroll = Math.max(
-    0,
-    document.documentElement.scrollHeight - viewportHeight
-  );
-  if (maxScroll <= MIN_SCROLLABLE_RANGE_PX) {
-    return 0;
-  }
-  const rect = hero.getBoundingClientRect();
-  if (!Number.isFinite(rect.height) || rect.height <= 0) {
-    return 0;
-  }
-  return clampProgress(-rect.top / rect.height);
+function getDocumentVisibleSnapshot(): boolean {
+  if (typeof document === 'undefined') return true;
+  return document.visibilityState !== 'hidden';
 }
 
-function clearBackdropVars(backdrop: HTMLElement): void {
-  backdrop.style.removeProperty('--hero-zoom-scale-progress');
-  backdrop.style.removeProperty('--hero-zoom-blur-progress');
-  backdrop.style.removeProperty('--hero-zoom-fade-progress');
+function getServerTrueSnapshot(): boolean {
+  return true;
 }
 
-function applyBackdropVars(backdrop: HTMLElement, progress: number): void {
-  const normalized = clampProgress(progress);
-  if (normalized === 0) {
-    clearBackdropVars(backdrop);
-    return;
-  }
-
-  const fadeProgress =
-    normalized === 1 ? 1 : Math.pow(normalized, FADE_CURVE_EXPONENT);
-
-  backdrop.style.setProperty(
-    '--hero-zoom-scale-progress',
-    normalized === 1 ? '1' : normalized.toFixed(4)
-  );
-  backdrop.style.setProperty(
-    '--hero-zoom-blur-progress',
-    normalized === 1 ? '1' : normalized.toFixed(4)
-  );
-  backdrop.style.setProperty(
-    '--hero-zoom-fade-progress',
-    fadeProgress === 1 ? '1' : fadeProgress.toFixed(4)
-  );
+function measureElementBox(element: HTMLElement): {
+  width: number;
+  height: number;
+} {
+  const rect = element.getBoundingClientRect();
+  return {
+    width: rect.width || element.clientWidth,
+    height: rect.height || element.clientHeight,
+  };
 }
 
 export function HeroBackdrop({ className, ...rest }: HeroBackdropProps) {
-  const prefersReducedMotion = useLiveReducedMotion();
-  const backdropRef = useRef<HTMLDivElement>(null);
+  const prefersReducedMotion = useSyncExternalStore(
+    subscribeReducedMotion,
+    getReducedMotionSnapshot,
+    getServerFalseSnapshot
+  );
+  const isDocumentVisible = useSyncExternalStore(
+    subscribeDocumentVisibility,
+    getDocumentVisibleSnapshot,
+    getServerTrueSnapshot
+  );
 
+  const [rendererStatus, setRendererStatus] =
+    useState<HeroBackdropRendererStatus>('loading');
+  const [isInView, setIsInView] = useState<boolean>(true);
+
+  const backdropRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const rendererRef = useRef<HeroBackdropRendererHandle | null>(null);
+
+  const playback = resolveBackdropPlaybackState({
+    prefersReducedMotion,
+    rendererStatus,
+    isInView,
+    isDocumentVisible,
+  });
+
+  // Observe whether the hero section intersects the viewport to pause offscreen work
   useEffect(() => {
     const backdrop = backdropRef.current;
-    if (!backdrop) return;
+    if (!backdrop || typeof IntersectionObserver === 'undefined') {
+      return;
+    }
 
-    const target = backdrop.closest('section') ?? backdrop.parentElement;
-    if (!target) return;
+    const target = backdrop.closest('section') ?? backdrop;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const latest = entries[entries.length - 1];
+        if (!latest) return;
+        setIsInView(latest.isIntersecting);
+      },
+      { threshold: 0 }
+    );
 
-    let cancelled = false;
-    let rafId: number | null = null;
-    let stopScroll: (() => void) | null = null;
-    let lastProgress = -1;
+    observer.observe(target);
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
-    const detachScroll = () => {
-      stopScroll?.();
-      stopScroll = null;
+  // Initialize native WebGL fluid backdrop renderer on demand (skipped when reduced-motion is active)
+  useEffect(() => {
+    if (prefersReducedMotion || getReducedMotionSnapshot()) {
+      return;
+    }
+
+    const backdrop = backdropRef.current;
+    const canvas = canvasRef.current;
+    if (!backdrop || !canvas) {
+      return;
+    }
+
+    const renderer = createHeroBackdropRenderer({
+      canvas,
+      imageSrc: heroBackdropAsset.src,
+      fallbackWidth: heroBackdropAsset.width,
+      fallbackHeight: heroBackdropAsset.height,
+      onStatusChange: (nextStatus) => {
+        setRendererStatus(nextStatus);
+      },
+    });
+    rendererRef.current = renderer;
+
+    const syncSize = () => {
+      const { width, height } = measureElementBox(backdrop);
+      renderer.resize(width, height, window.devicePixelRatio || 1);
     };
 
-    const writeProgress = (rawProgress: number) => {
-      const normalized = clampProgress(rawProgress);
-      if (normalized === lastProgress) return;
-      lastProgress = normalized;
-      applyBackdropVars(backdrop, normalized);
-    };
-
-    const sync = () => {
-      if (cancelled) return;
-
-      if (prefersReducedMotion) {
-        detachScroll();
-        lastProgress = -1;
-        clearBackdropVars(backdrop);
-        backdrop.dataset.state = 'reduced-motion';
-        return;
-      }
-
-      backdrop.dataset.state = 'active';
-      writeProgress(readHeroScrollProgress(target));
-
-      if (!stopScroll) {
-        stopScroll = scroll(
-          (progress, info) => {
-            if (cancelled) return;
-            const effectiveProgress =
-              info.y.scrollLength <= MIN_SCROLLABLE_RANGE_PX ? 0 : progress;
-            writeProgress(effectiveProgress);
-          },
-          {
-            target,
-            offset: ['start start', 'end start'],
-          }
-        );
-      }
-    };
-
-    const scheduleSync = () => {
-      if (cancelled || rafId !== null) return;
-      rafId = window.requestAnimationFrame(() => {
-        rafId = null;
-        sync();
-      });
-    };
-
-    sync();
+    syncSize();
 
     let resizeObserver: ResizeObserver | null = null;
     if (typeof ResizeObserver !== 'undefined') {
-      resizeObserver = new ResizeObserver(scheduleSync);
-      resizeObserver.observe(target);
+      resizeObserver = new ResizeObserver(syncSize);
+      resizeObserver.observe(backdrop);
     }
 
-    window.addEventListener('resize', scheduleSync, { passive: true });
-    window.addEventListener('pageshow', scheduleSync);
+    window.addEventListener('resize', syncSize, { passive: true });
+    window.addEventListener('pageshow', syncSize);
 
     return () => {
-      cancelled = true;
-      if (rafId !== null) {
-        window.cancelAnimationFrame(rafId);
-      }
-      detachScroll();
       resizeObserver?.disconnect();
-      window.removeEventListener('resize', scheduleSync);
-      window.removeEventListener('pageshow', scheduleSync);
-      clearBackdropVars(backdrop);
-      delete backdrop.dataset.state;
+      window.removeEventListener('resize', syncSize);
+      window.removeEventListener('pageshow', syncSize);
+      renderer.dispose();
+      if (rendererRef.current === renderer) {
+        rendererRef.current = null;
+      }
+      setRendererStatus('loading');
     };
   }, [prefersReducedMotion]);
+
+  // Start or pause frame loop cleanly whenever playback conditions change
+  useEffect(() => {
+    rendererRef.current?.setAnimating(playback.shouldAnimate);
+  }, [playback.shouldAnimate]);
 
   return (
     <div
@@ -204,7 +194,15 @@ export function HeroBackdrop({ className, ...rest }: HeroBackdropProps) {
       className={clsx(styles.backdrop, className)}
       aria-hidden="true"
       data-hero-backdrop="true"
+      data-state={playback.dataState}
       {...rest}
-    />
+    >
+      <div className={styles.backdropStatic} />
+      <canvas
+        ref={canvasRef}
+        className={styles.backdropCanvas}
+        data-visible={playback.canvasVisible ? 'true' : 'false'}
+      />
+    </div>
   );
 }

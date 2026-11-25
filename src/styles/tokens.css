@@ -415,20 +415,25 @@
   --hero-padding-top-mobile: calc(var(--layout-header-height) + var(--space-xl));
   --hero-padding-top-desktop: calc(var(--layout-header-height) + var(--space-2xl));
   --hero-padding-bottom: calc(var(--space-2xl) + var(--tap-target));
-  --hero-copy-wash: radial-gradient(
-    ellipse 72% 64% at 50% 50%,
-    color-mix(in srgb, var(--slate-1) 68%, transparent) 0%,
-    color-mix(in srgb, var(--slate-1) 36%, transparent) 48%,
-    transparent 82%
-  );
+  --hero-copy-wash:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--slate-1) 38%, transparent) 0,
+      color-mix(in srgb, var(--slate-1) 22%, transparent) var(--layout-header-height),
+      color-mix(in srgb, var(--slate-1) 6%, transparent) calc(var(--layout-header-height) * 1.65),
+      transparent calc(var(--layout-header-height) * 2.25)
+    ),
+    radial-gradient(
+      ellipse 72% 64% at 50% 50%,
+      color-mix(in srgb, var(--slate-1) 68%, transparent) 0%,
+      color-mix(in srgb, var(--slate-1) 36%, transparent) 48%,
+      transparent 82%
+    );
   --hero-outline-bg: color-mix(in srgb, var(--slate-1) 72%, transparent);
   --z-hero-backdrop: 1;
   --z-hero-wash: 2;
   --z-hero-content: 3;
-  --hero-zoom-scale-max-mobile: 1.18;
-  --hero-zoom-scale-max-desktop: 1.24;
-  --hero-zoom-blur-max: 0.25rem;
-  --hero-zoom-opacity-min: 0.25;
+  --hero-backdrop-fade-duration: 420ms;
 
   /* Hero Rotating Messages & Scramble Tokens (Additive) */
   --hero-message-interval: 3500ms;

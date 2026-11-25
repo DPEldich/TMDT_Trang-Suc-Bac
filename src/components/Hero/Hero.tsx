@@ -17,7 +17,6 @@ export function Hero() {
       aria-labelledby="hero-heading"
       data-hero-surface-anchor="true"
     >
-      <HeroBackdrop />
       <div className={styles.copyWash} aria-hidden="true" />
 
       <Container className={styles.container}>
@@ -45,6 +44,8 @@ export function Hero() {
           </div>
         </div>
       </Container>
+
+      <HeroBackdrop />
     </section>
   );
 }
