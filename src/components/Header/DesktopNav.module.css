@@ -5,7 +5,6 @@
 }
 
 .navLink {
-  position: relative;
   display: inline-flex;
   align-items: center;
   min-height: var(--tap-target);
@@ -133,26 +132,8 @@
   }
 }
 
-.navLink::after {
-  content: '';
-  position: absolute;
-  left: var(--space-3xs);
-  right: var(--space-3xs);
-  bottom: var(--space-2xs);
-  height: var(--border-size-2);
-  border-radius: var(--radius-full);
-  background-color: var(--text-primary);
-  transform: scaleX(0);
-  transform-origin: center;
-  transition: transform var(--transition-fast);
-}
-
 .navLink[data-active='true'] {
   color: var(--text-primary);
-}
-
-.navLink[data-active='true']::after {
-  transform: scaleX(1);
 }
 
 @media (hover: hover) and (pointer: fine) {

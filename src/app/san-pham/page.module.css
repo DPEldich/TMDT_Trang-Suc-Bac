@@ -9,35 +9,6 @@
   background-color: var(--bg-canvas);
 }
 
-.breadcrumbs {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2xs);
-  font-size: var(--text-caption);
-  margin-bottom: var(--space-sm);
-  color: var(--text-secondary);
-}
-
-.crumbLink {
-  display: inline-flex;
-  align-items: center;
-  min-height: var(--tap-target);
-  color: var(--text-secondary);
-  text-decoration: none;
-  transition: color var(--transition-fast);
-}
-
-.crumbSeparator {
-  color: var(--text-secondary);
-  opacity: 0.6;
-}
-
-.crumbCurrent {
-  color: var(--text-primary);
-  font-weight: var(--font-weight-5);
-}
-
 .pageTitle {
   font-family: var(--font-family-display);
   font-size: var(--text-display);
@@ -63,6 +34,16 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
+}
+
+.fallbackSearchTrigger {
+  width: var(--search-trigger-outer);
+  height: var(--search-trigger-outer);
+  border-radius: var(--search-morph-radius-closed);
+  border: var(--border-size-1) solid var(--border-subtle);
+  background-color: var(--bg-store-glass);
+  box-shadow: var(--shadow-store-glass);
+  animation: skeletonPulse 1.6s var(--ease-interaction) infinite;
 }
 
 .fallbackChips {
@@ -180,6 +161,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .fallbackSearchTrigger,
   .fallbackChip,
   .fallbackSelect,
   .fallbackSummary,
@@ -189,12 +171,6 @@
   .fallbackPriceLine,
   .fallbackCueLine {
     animation: none;
-  }
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .crumbLink:hover {
-    color: var(--text-primary);
   }
 }
 

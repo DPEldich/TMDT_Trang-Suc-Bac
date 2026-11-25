@@ -1,0 +1,585 @@
+.coverflowRoot {
+  --coverflow-perspective-current: var(--coverflow-perspective);
+  --coverflow-card-width-current: var(--coverflow-card-width-mobile);
+  --coverflow-card-min-height-current: var(--coverflow-card-min-height-mobile);
+  --coverflow-media-size-current: var(--coverflow-media-size-mobile);
+  --coverflow-offset-x-current: var(--coverflow-offset-x-mobile);
+  --coverflow-far-offset-x-current: var(--coverflow-far-offset-x-mobile);
+  --coverflow-side-rotate-y-current: var(--coverflow-side-rotate-y-mobile);
+  --coverflow-far-rotate-y-current: var(--coverflow-far-rotate-y-mobile);
+  --coverflow-side-scale-current: var(--coverflow-side-scale-mobile);
+  --coverflow-side-opacity-current: var(--coverflow-side-opacity-mobile);
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+/* CSS-only measurement probe read on mount/resize so tokens stay the single source of geometry */
+.geometryProbe {
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: var(--coverflow-offset-x-current);
+  height: var(--coverflow-far-offset-x-current);
+  pointer-events: none;
+  visibility: hidden;
+  contain: strict;
+}
+
+.stageViewport {
+  position: relative;
+  margin-inline: calc(var(--space-sm) * -1);
+  padding-block: var(--space-sm) var(--space-md);
+  overflow: hidden;
+  touch-action: pan-y pinch-zoom;
+  user-select: none;
+  border-radius: var(--radius-xl);
+}
+
+.stageViewport[data-interactive='true'] {
+  cursor: grab;
+}
+
+.stageViewport[data-dragging='true'] {
+  cursor: grabbing;
+}
+
+.stageViewport:focus-visible {
+  outline: var(--border-size-2) solid var(--border-focus);
+  outline-offset: var(--outline-offset-focus);
+}
+
+.stageTrack {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  perspective: var(--coverflow-perspective-current);
+  perspective-origin: 50% 44%;
+}
+
+.slide {
+  grid-area: 1 / 1;
+  position: relative;
+  width: var(--coverflow-card-width-current);
+  transform-origin: center center;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+  z-index: var(--z-coverflow-back);
+}
+
+.slide[data-layer='front'] {
+  z-index: var(--z-coverflow-front);
+}
+
+.slide[data-layer='side'] {
+  z-index: var(--z-coverflow-side);
+}
+
+.slide[data-layer='back'] {
+  z-index: var(--z-coverflow-back);
+}
+
+.slide[data-slot='far-prev'],
+.slide[data-slot='far-next'] {
+  pointer-events: none;
+}
+
+/* Deterministic SSR / pre-hydration Coverflow poses matching Motion's transform order */
+.stageTrack:not([data-hydrated='true']) .slide[data-slot='center'] {
+  transform: translateX(0) scale(1);
+  opacity: 1;
+}
+
+.stageTrack:not([data-hydrated='true']) .slide[data-slot='prev'] {
+  transform: translateX(calc(var(--coverflow-offset-x-current) * -1))
+    scale(var(--coverflow-side-scale-current))
+    rotateY(var(--coverflow-side-rotate-y-current));
+  opacity: var(--coverflow-side-opacity-current);
+}
+
+.stageTrack:not([data-hydrated='true']) .slide[data-slot='next'] {
+  transform: translateX(var(--coverflow-offset-x-current))
+    scale(var(--coverflow-side-scale-current))
+    rotateY(calc(var(--coverflow-side-rotate-y-current) * -1));
+  opacity: var(--coverflow-side-opacity-current);
+}
+
+.stageTrack:not([data-hydrated='true']) .slide[data-slot='far-prev'] {
+  transform: translateX(calc(var(--coverflow-far-offset-x-current) * -1))
+    scale(var(--coverflow-far-scale))
+    rotateY(var(--coverflow-far-rotate-y-current));
+  opacity: 0;
+}
+
+.stageTrack:not([data-hydrated='true']) .slide[data-slot='far-next'] {
+  transform: translateX(var(--coverflow-far-offset-x-current))
+    scale(var(--coverflow-far-scale))
+    rotateY(calc(var(--coverflow-far-rotate-y-current) * -1));
+  opacity: 0;
+}
+
+/* Jewelry Showcase Card — Matte Porcelain / Silver / Charcoal */
+.productCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  width: 100%;
+  min-height: var(--coverflow-card-min-height-current);
+  padding: var(--space-md);
+  background-color: var(--bg-coverflow-card-side);
+  background-image: var(--sheen-coverflow-card);
+  border: var(--border-size-1) solid var(--border-coverflow-side);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-coverflow-side);
+  color: var(--text-primary);
+  transition:
+    background-color var(--transition-normal),
+    border-color var(--transition-normal),
+    box-shadow var(--transition-normal);
+}
+
+.productCard[data-active='true'] {
+  background-color: var(--bg-coverflow-card);
+  border-color: var(--border-coverflow-active);
+  box-shadow: var(--shadow-coverflow-active);
+}
+
+.productVisual {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1 1 auto;
+  width: 100%;
+  padding: var(--space-sm) var(--space-sm) var(--space-2xs);
+  background-color: var(--bg-coverflow-visual);
+  background-image: var(--stage-glow-pearl);
+  border: var(--border-size-1) solid var(--border-hairline);
+  border-radius: var(--radius-lg);
+}
+
+.productImage {
+  width: 100%;
+  max-width: var(--coverflow-media-size-current);
+  height: auto;
+  aspect-ratio: var(--product-image-ratio);
+  object-fit: contain;
+  filter: var(--filter-jewelry-light);
+  pointer-events: none;
+  transition: transform var(--transition-media);
+}
+
+.productFloorShadow {
+  display: block;
+  width: var(--stage-shadow-width);
+  max-width: 72%;
+  height: var(--stage-shadow-height);
+  margin-top: calc(var(--space-2xs) * -1);
+  background: var(--stage-floor-shadow);
+  border-radius: var(--radius-full);
+  pointer-events: none;
+}
+
+.productBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  min-width: 0;
+}
+
+.productType {
+  font-size: var(--text-caption);
+  font-weight: var(--font-weight-5);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.productTitle {
+  font-family: var(--font-family-display);
+  font-size: var(--text-title);
+  font-weight: var(--font-weight-6);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-normal);
+  color: var(--text-primary);
+  margin-bottom: 0;
+  text-wrap: balance;
+  overflow-wrap: break-word;
+}
+
+.productMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3xs) var(--space-xs);
+  padding-top: var(--space-3xs);
+}
+
+.priceValue {
+  font-family: var(--font-family-display);
+  font-size: var(--text-lead);
+  font-weight: var(--font-weight-6);
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--leading-heading);
+  white-space: nowrap;
+}
+
+.stockStatus {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  font-size: var(--text-caption);
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.stockDot {
+  width: var(--dot-size);
+  height: var(--dot-size);
+  border-radius: var(--radius-full);
+  background-color: var(--text-success);
+  flex-shrink: 0;
+}
+
+.stockStatus[data-available='false'] .stockDot {
+  background-color: var(--text-danger);
+}
+
+.productAction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2xs);
+  width: 100%;
+  min-height: var(--tap-target);
+  margin-top: var(--space-2xs);
+  padding: var(--space-2xs) var(--space-md);
+  border-radius: var(--radius-full);
+  border: var(--border-size-1) solid var(--border-hairline);
+  background-color: var(--bg-surface-strong);
+  color: var(--text-secondary);
+  font-family: var(--font-family-sans);
+  font-size: var(--text-small);
+  font-weight: var(--font-weight-5);
+  line-height: var(--leading-snug);
+  text-decoration: none;
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.productAction[data-active='true'] {
+  background-color: var(--text-primary);
+  border-color: var(--text-primary);
+  color: var(--text-inverse);
+}
+
+.productAction[data-active='true']:active {
+  transform: scale(var(--scale-press));
+}
+
+.productAction:focus-visible {
+  outline: var(--border-size-2) solid var(--border-focus);
+  outline-offset: var(--outline-offset-focus);
+}
+
+.actionIcon {
+  width: var(--icon-sm);
+  height: var(--icon-sm);
+  flex-shrink: 0;
+  transition: transform var(--transition-fast);
+}
+
+.sideSelectOverlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  border-radius: var(--radius-xl);
+  background: transparent;
+  cursor: pointer;
+}
+
+.sideSelectOverlay:focus-visible {
+  outline: var(--border-size-2) solid var(--border-focus);
+  outline-offset: var(--outline-offset-focus);
+}
+
+/* Controls Bar: Symmetrical Prev / 44x44 Dot Selectors / Next with Counter Below */
+.controlsBar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3xs);
+  width: 100%;
+  max-width: 100%;
+}
+
+.controlsRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--space-2xs);
+  max-width: 100%;
+}
+
+.navButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--coverflow-control-size);
+  height: var(--coverflow-control-size);
+  min-width: var(--tap-target);
+  min-height: var(--tap-target);
+  border-radius: var(--radius-full);
+  border: var(--border-size-1) solid var(--border-coverflow-active);
+  background-color: var(--bg-coverflow-card);
+  box-shadow: var(--shadow-coverflow-control);
+  color: var(--text-primary);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    transform var(--transition-fast),
+    opacity var(--transition-fast);
+}
+
+.navButton:active:not(:disabled) {
+  transform: scale(var(--scale-press));
+}
+
+.navButton:focus-visible {
+  outline: var(--border-size-2) solid var(--border-focus);
+  outline-offset: var(--outline-offset-focus);
+}
+
+.navButton:disabled {
+  opacity: 0.36;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.controlIcon {
+  width: var(--icon-md);
+  height: var(--icon-md);
+  flex-shrink: 0;
+}
+
+.dotGroup {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0;
+  max-width: 100%;
+}
+
+.dotButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--tap-target);
+  min-height: var(--tap-target);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+.dotButton:focus-visible {
+  outline: var(--border-size-2) solid var(--border-focus);
+  outline-offset: var(--outline-offset-focus);
+}
+
+.dotPill {
+  display: block;
+  width: var(--coverflow-dot-width);
+  height: var(--coverflow-dot-height);
+  border-radius: var(--radius-full);
+  background-color: var(--accent-silver);
+  opacity: 0.55;
+  transition:
+    width var(--transition-normal),
+    background-color var(--transition-fast),
+    opacity var(--transition-fast);
+}
+
+.dotButton[aria-pressed='true'] .dotPill {
+  width: var(--coverflow-dot-active-width);
+  background-color: var(--text-primary);
+  opacity: 1;
+}
+
+.counter {
+  font-size: var(--text-small);
+  font-weight: var(--font-weight-5);
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.emptyState {
+  padding: var(--space-xl);
+  background-color: var(--bg-card);
+  border: var(--border-size-1) solid var(--border-card);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-store-card);
+  text-align: center;
+}
+
+.emptyStateText {
+  font-size: var(--text-body);
+  color: var(--text-secondary);
+  margin-bottom: 0;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .productCard[data-active='true']:hover .productImage {
+    transform: scale(var(--scale-store-media-hover));
+  }
+
+  .productAction[data-active='true']:hover {
+    background-color: var(--accent-primary);
+    border-color: var(--accent-primary);
+    color: var(--accent-primary-contrast);
+  }
+
+  .productAction[data-active='true']:hover .actionIcon {
+    transform: translateX(var(--nudge-arrow));
+  }
+
+  .slide[data-slot='prev']:hover .productCard,
+  .slide[data-slot='next']:hover .productCard {
+    border-color: var(--border-coverflow-active);
+    box-shadow: var(--shadow-card-hover);
+  }
+
+  .navButton:not(:disabled):hover {
+    background-color: var(--bg-card-hover);
+    border-color: var(--border-strong);
+  }
+
+  .dotButton:hover .dotPill {
+    opacity: 0.9;
+  }
+}
+
+@media (min-width: 48rem) {
+  .coverflowRoot {
+    --coverflow-perspective-current: var(--coverflow-perspective-tablet);
+    --coverflow-card-width-current: var(--coverflow-card-width-tablet);
+    --coverflow-card-min-height-current: var(--coverflow-card-min-height-tablet);
+    --coverflow-media-size-current: var(--coverflow-media-size-tablet);
+    --coverflow-offset-x-current: var(--coverflow-offset-x-tablet);
+    --coverflow-far-offset-x-current: var(--coverflow-far-offset-x-tablet);
+    --coverflow-side-rotate-y-current: var(--coverflow-side-rotate-y-tablet);
+    --coverflow-far-rotate-y-current: var(--coverflow-far-rotate-y-tablet);
+    --coverflow-side-scale-current: var(--coverflow-side-scale-tablet);
+    --coverflow-side-opacity-current: var(--coverflow-side-opacity-desktop);
+  }
+
+  .controlsRow {
+    gap: var(--space-sm);
+  }
+
+  .stageViewport {
+    margin-inline: 0;
+    padding-block: var(--space-sm) var(--space-md);
+  }
+
+  .productCard {
+    padding: var(--space-md) var(--space-lg);
+    gap: var(--space-sm);
+  }
+}
+
+@media (min-width: 64rem) {
+  .coverflowRoot {
+    --coverflow-perspective-current: var(--coverflow-perspective-desktop);
+    --coverflow-card-width-current: var(--coverflow-card-width-desktop);
+    --coverflow-card-min-height-current: var(--coverflow-card-min-height-desktop);
+    --coverflow-media-size-current: var(--coverflow-media-size-desktop);
+    --coverflow-offset-x-current: var(--coverflow-offset-x-desktop);
+    --coverflow-far-offset-x-current: var(--coverflow-far-offset-x-desktop);
+    --coverflow-side-rotate-y-current: var(--coverflow-side-rotate-y-desktop);
+    --coverflow-far-rotate-y-current: var(--coverflow-far-rotate-y-desktop);
+    --coverflow-side-scale-current: var(--coverflow-side-scale-desktop);
+  }
+}
+
+@media (min-width: 80rem) {
+  .coverflowRoot {
+    --coverflow-card-width-current: var(--coverflow-card-width-wide);
+    --coverflow-offset-x-current: var(--coverflow-offset-x-wide);
+    --coverflow-far-offset-x-current: var(--coverflow-far-offset-x-wide);
+    --coverflow-side-rotate-y-current: var(--coverflow-side-rotate-y-wide);
+    --coverflow-far-rotate-y-current: var(--coverflow-far-rotate-y-wide);
+    --coverflow-side-opacity-current: var(--coverflow-side-opacity-wide);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stageTrack:not([data-hydrated='true']) .slide[data-slot='prev'] {
+    transform: translateX(calc(var(--coverflow-offset-x-current) * -1))
+      scale(var(--coverflow-side-scale-current));
+  }
+
+  .stageTrack:not([data-hydrated='true']) .slide[data-slot='next'] {
+    transform: translateX(var(--coverflow-offset-x-current))
+      scale(var(--coverflow-side-scale-current));
+  }
+
+  .stageTrack:not([data-hydrated='true']) .slide[data-slot='far-prev'] {
+    transform: translateX(calc(var(--coverflow-far-offset-x-current) * -1))
+      scale(var(--coverflow-far-scale));
+  }
+
+  .stageTrack:not([data-hydrated='true']) .slide[data-slot='far-next'] {
+    transform: translateX(var(--coverflow-far-offset-x-current))
+      scale(var(--coverflow-far-scale));
+  }
+
+  .productCard,
+  .productImage,
+  .productAction,
+  .actionIcon,
+  .navButton,
+  .dotPill {
+    transition: none;
+  }
+
+  .productCard[data-active='true']:hover .productImage,
+  .productAction[data-active='true']:hover .actionIcon,
+  .productAction[data-active='true']:active,
+  .navButton:active:not(:disabled) {
+    transform: none;
+  }
+}

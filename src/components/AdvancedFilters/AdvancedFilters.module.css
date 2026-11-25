@@ -1,0 +1,215 @@
+.panel {
+  padding: var(--space-sm);
+  border-radius: var(--radius-lg);
+  border: var(--border-size-1) solid var(--border-subtle);
+  background-color: var(--bg-store-glass);
+  box-shadow: var(--shadow-store-glass);
+  -webkit-backdrop-filter: blur(var(--blur-store-glass))
+    saturate(var(--saturation-store-glass));
+  backdrop-filter: blur(var(--blur-store-glass))
+    saturate(var(--saturation-store-glass));
+}
+
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.priceFields {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-sm);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xs);
+  min-width: 0;
+}
+
+.fieldLabel {
+  font-size: var(--text-caption);
+  font-weight: var(--font-weight-6);
+  color: var(--text-secondary);
+  line-height: var(--leading-snug);
+}
+
+.priceInputWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  border-radius: var(--radius-md);
+  border: var(--border-size-1) solid var(--border-subtle);
+  background-color: var(--bg-canvas);
+  transition:
+    border-color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.priceInputWrap:focus-within {
+  border-color: var(--border-focus);
+}
+
+.priceInputWrap[data-invalid='true'] {
+  border-color: var(--border-danger);
+  background-color: var(--bg-danger-subtle);
+}
+
+.priceInput {
+  width: 100%;
+  min-width: 0;
+  min-height: var(--tap-target);
+  padding: var(--space-2xs) var(--space-2xs) var(--space-2xs) var(--space-sm);
+  border: 0;
+  border-radius: var(--radius-md);
+  background-color: transparent;
+  color: var(--text-primary);
+  font-size: var(--text-small);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--leading-snug);
+}
+
+.priceInput::placeholder {
+  color: var(--text-muted);
+}
+
+.priceInput:focus-visible {
+  outline: var(--border-size-2) solid var(--border-focus);
+  outline-offset: var(--outline-offset-focus);
+}
+
+.currencyUnit {
+  flex: 0 0 auto;
+  padding: 0 var(--space-sm) 0 var(--space-3xs);
+  font-size: var(--text-caption);
+  font-weight: var(--font-weight-6);
+  color: var(--text-secondary);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.fieldError {
+  margin-bottom: 0;
+  font-size: var(--text-caption);
+  color: var(--text-danger);
+  line-height: var(--leading-snug);
+}
+
+.actionsRow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.checkboxLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  min-height: var(--tap-target);
+  padding: var(--space-3xs) 0;
+  color: var(--text-primary);
+  font-size: var(--text-small);
+  font-weight: var(--font-weight-5);
+  line-height: var(--leading-snug);
+  cursor: pointer;
+}
+
+.checkboxInput {
+  flex: 0 0 auto;
+  width: var(--control-checkbox-size);
+  height: var(--control-checkbox-size);
+  margin: 0;
+  accent-color: var(--text-primary);
+  cursor: pointer;
+}
+
+.checkboxInput:focus-visible {
+  outline: var(--border-size-2) solid var(--border-focus);
+  outline-offset: var(--outline-offset-focus);
+}
+
+.checkboxText {
+  min-width: 0;
+}
+
+.applyButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--tap-target);
+  padding: var(--space-2xs) var(--space-md);
+  border-radius: var(--radius-full);
+  border: var(--border-size-1) solid var(--text-primary);
+  background-color: var(--text-primary);
+  color: var(--text-inverse);
+  font-size: var(--text-small);
+  font-weight: var(--font-weight-6);
+  line-height: var(--leading-snug);
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    opacity var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.applyButton:active {
+  transform: scale(var(--scale-press));
+}
+
+.applyButton:focus-visible {
+  outline: var(--border-size-2) solid var(--border-focus);
+  outline-offset: var(--outline-offset-focus);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .priceInputWrap:hover:not([data-invalid='true']) {
+    border-color: var(--border-strong);
+  }
+
+  .applyButton:hover {
+    opacity: 0.9;
+  }
+}
+
+@media (min-width: 36rem) {
+  .priceFields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .actionsRow {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+  }
+
+  .applyButton {
+    flex: 0 0 auto;
+  }
+}
+
+@media (min-width: 64rem) {
+  .panel {
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: var(--space-md);
+  }
+
+  .priceFields {
+    grid-template-columns: repeat(2, minmax(var(--control-price-min-width), 1fr));
+  }
+
+  .actionsRow {
+    align-items: center;
+    padding-top: calc(var(--text-caption) * var(--leading-snug) + var(--space-3xs));
+    gap: var(--space-md);
+  }
+}

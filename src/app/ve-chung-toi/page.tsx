@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { Container } from '../../components/UI/Container';
 import { TEAM_MEMBERS } from '../../data/team';
 import styles from './page.module.css';
@@ -15,18 +14,6 @@ export default function AboutPage() {
     <main id="main-content" className={styles.main}>
       <div className={styles.pageHeader}>
         <Container>
-          <nav className={styles.breadcrumbs} aria-label="Đường dẫn điều hướng">
-            <Link href="/" className={styles.crumbLink}>
-              Trang chủ
-            </Link>
-            <span className={styles.crumbSeparator} aria-hidden="true">
-              /
-            </span>
-            <span className={styles.crumbCurrent} aria-current="page">
-              Về chúng tôi
-            </span>
-          </nav>
-
           <h1 className={styles.pageTitle}>Về NFA</h1>
           <p className={styles.pageDescription}>
             Dự án trang sức NFA của nhóm sinh viên môn Thương mại điện tử.

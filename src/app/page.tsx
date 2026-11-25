@@ -1,10 +1,10 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Suspense } from 'react';
-import { ChevronRight } from 'lucide-react';
+import { ArrowUpRight, ChevronRight } from 'lucide-react';
 import { Hero } from '../components/Hero';
 import { Container } from '../components/UI/Container';
-import { ProductCard } from '../components/ProductCard';
+import { FeaturedCoverflow } from '../components/FeaturedProducts';
 import { FeedbackSection } from '../components/FeedbackSection';
 import { getFeaturedProducts, getAllProducts } from '../data/products';
 import { getSheetFeedback } from '../data/sheetFeedback';
@@ -15,19 +15,54 @@ async function LiveFeedback() {
   return <FeedbackSection feedbacks={await getSheetFeedback()} />;
 }
 
-const CATEGORY_PREVIEW_IDS: Record<ProductCategory, string> = {
-  nhan: 'prod-01',
-  'day-chuyen': 'prod-04',
-  'lac-tay': 'prod-06',
-  'bong-tai': 'prod-08',
-  'lac-chan': 'prod-51',
+type CategoryLayoutSlot =
+  | 'tall-primary'
+  | 'tall-secondary'
+  | 'wide-upper'
+  | 'compact-left'
+  | 'compact-right';
+
+type CategoryTone = 'midnight' | 'champagne' | 'pearl' | 'mist';
+
+interface CategoryShowcaseConfig {
+  previewId: string;
+  slot: CategoryLayoutSlot;
+  tone: CategoryTone;
+}
+
+const CATEGORY_SHOWCASE_CONFIG: Record<ProductCategory, CategoryShowcaseConfig> = {
+  nhan: {
+    previewId: 'prod-01',
+    slot: 'tall-primary',
+    tone: 'midnight',
+  },
+  'day-chuyen': {
+    previewId: 'prod-04',
+    slot: 'tall-secondary',
+    tone: 'champagne',
+  },
+  'lac-tay': {
+    previewId: 'prod-06',
+    slot: 'wide-upper',
+    tone: 'pearl',
+  },
+  'bong-tai': {
+    previewId: 'prod-08',
+    slot: 'compact-left',
+    tone: 'mist',
+  },
+  'lac-chan': {
+    previewId: 'prod-51',
+    slot: 'compact-right',
+    tone: 'champagne',
+  },
 };
 
 function getCategoryPreviewProduct(
   categoryId: ProductCategory,
   products: readonly Product[]
 ): Product | undefined {
-  const preferredId = CATEGORY_PREVIEW_IDS[categoryId];
+  const preferredId = CATEGORY_SHOWCASE_CONFIG[categoryId].previewId;
   return (
     products.find((product) => product.id === preferredId) ??
     products.find((product) => product.category === categoryId)
@@ -37,59 +72,90 @@ function getCategoryPreviewProduct(
 export default function HomePage() {
   const featured = getFeaturedProducts();
   const allProducts = getAllProducts();
-  const displayHighlights = featured.length > 0 ? featured : allProducts.slice(0, 4);
+  const displayHighlights =
+    featured.length > 0 ? featured : allProducts.slice(0, 4);
 
   return (
     <main id="main-content" className={styles.main}>
       {/* 1. Centered Product-Led Hero */}
       <Hero />
 
-      {/* 2. Featured Products */}
-      <section className={styles.featuredSection} aria-labelledby="featured-heading">
+      {/* 2. Featured Products Coverflow Showcase */}
+      <section
+        className={styles.featuredSection}
+        aria-labelledby="featured-heading"
+      >
         <Container>
-          <div className={styles.sectionHeader}>
-            <h2 id="featured-heading" className={styles.sectionTitle}>
-              Mẫu nổi bật
-            </h2>
-            <Link href="/san-pham" className={styles.sectionActionLink}>
-              <span>Xem tất cả</span>
-              <ChevronRight className={styles.actionChevron} aria-hidden="true" />
+          <div className={styles.featuredHeader}>
+            <div className={styles.featuredHeaderCopy}>
+              <h2 id="featured-heading" className={styles.sectionTitle}>
+                <span className={styles.sectionTitleAccent}>Mẫu nổi bật.</span>{' '}
+                <span className={styles.sectionTitleCompanion}>
+                  Thiết kế tiêu biểu từ bộ sưu tập.
+                </span>
+              </h2>
+              <p className={styles.featuredIntroText}>
+                Tuyển chọn trang sức bạc, vàng và bạch kim từ bộ sưu tập{' '}
+                <span className={styles.featuredCount}>{allProducts.length}</span>{' '}
+                thiết kế NFA.
+              </p>
+            </div>
+
+            <Link href="/san-pham" className={styles.collectionLink}>
+              <span>Xem bộ sưu tập</span>
+              <ArrowUpRight className={styles.collectionLinkIcon} aria-hidden="true" />
             </Link>
           </div>
 
-          <div className={styles.productGrid}>
-            {displayHighlights.map((product) => (
-              <ProductCard key={product.id} product={product} headingAs="h3" />
-            ))}
-          </div>
+          {displayHighlights.length > 0 ? (
+            <FeaturedCoverflow
+              products={displayHighlights}
+              headingId="featured-heading"
+              headingAs="h3"
+            />
+          ) : (
+            <div className={styles.emptyFeatured} role="status">
+              <p className={styles.emptyFeaturedText}>
+                Hiện chưa có mẫu nổi bật để hiển thị.
+              </p>
+            </div>
+          )}
         </Container>
       </section>
 
-      {/* 3. Image-Led Categories */}
-      <section className={styles.categorySection} aria-labelledby="categories-heading">
+      {/* 3. Asymmetric 5-Category Showcase */}
+      <section
+        className={styles.categorySection}
+        aria-labelledby="categories-heading"
+      >
         <Container>
           <div className={styles.sectionHeader}>
             <h2 id="categories-heading" className={styles.sectionTitle}>
-              Danh mục
+              <span className={styles.sectionTitleAccent}>Danh mục.</span>{' '}
+              <span className={styles.sectionTitleCompanion}>
+                Năm dòng trang sức chủ đạo.
+              </span>
             </h2>
           </div>
 
           <div className={styles.categoryGrid}>
             {CATEGORIES.map((category) => {
-              const previewProduct = getCategoryPreviewProduct(category.id, allProducts);
+              const config = CATEGORY_SHOWCASE_CONFIG[category.id];
+              const previewProduct = getCategoryPreviewProduct(
+                category.id,
+                allProducts
+              );
 
               return (
                 <Link
                   key={category.id}
                   href={`/san-pham?category=${category.id}`}
                   className={styles.categoryTile}
+                  data-slot={config.slot}
+                  data-tone={config.tone}
                 >
                   <div className={styles.categoryCopy}>
                     <h3 className={styles.categoryTitle}>{category.name}</h3>
-                    <span className={styles.categoryAction}>
-                      <span>Xem danh mục</span>
-                      <ChevronRight className={styles.actionChevron} aria-hidden="true" />
-                    </span>
                   </div>
 
                   {previewProduct && (
@@ -99,12 +165,20 @@ export default function HomePage() {
                         alt={previewProduct.imageAlt}
                         width={300}
                         height={300}
-                        sizes="(max-width: 48rem) 144px, 176px"
+                        sizes="(max-width: 48rem) 200px, (max-width: 64rem) 220px, 260px"
                         loading="lazy"
                         className={styles.categoryImage}
                       />
                     </div>
                   )}
+
+                  <span className={styles.categoryCueCircle} aria-hidden="true">
+                    {config.tone === 'midnight' ? (
+                      <ArrowUpRight className={styles.cueIcon} />
+                    ) : (
+                      <ChevronRight className={styles.cueIcon} />
+                    )}
+                  </span>
                 </Link>
               );
             })}

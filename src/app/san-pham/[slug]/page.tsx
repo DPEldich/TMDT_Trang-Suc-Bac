@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Info } from 'lucide-react';
 import { Container } from '../../../components/UI/Container';
@@ -8,7 +7,6 @@ import { ProductCard } from '../../../components/ProductCard';
 import { AddToCartForm } from '../../../components/AddToCartForm';
 import { getAllProducts, getProductBySlug } from '../../../data/products';
 import {
-  CATEGORIES,
   getItemTypeLabel,
   getSeparationNotice,
 } from '../../../types/product';
@@ -60,44 +58,12 @@ export default async function ProductDetailPage({
   const relatedProducts = allProducts
     .filter((item) => item.id !== product.id)
     .slice(0, 4);
-  const categoryInfo = CATEGORIES.find((item) => item.id === product.category);
   const typeLabel = getItemTypeLabel(product.itemType);
   const separationNotice = getSeparationNotice(product.itemType);
 
   return (
     <main id="main-content" className={styles.main}>
       <Container>
-        <nav className={styles.breadcrumbs} aria-label="Đường dẫn điều hướng">
-          <Link href="/" className={styles.crumbLink}>
-            Trang chủ
-          </Link>
-          <span className={styles.crumbSeparator} aria-hidden="true">
-            /
-          </span>
-          <Link href="/san-pham" className={styles.crumbLink}>
-            Bộ sưu tập
-          </Link>
-          {categoryInfo && (
-            <>
-              <span className={styles.crumbSeparator} aria-hidden="true">
-                /
-              </span>
-              <Link
-                href={`/san-pham?category=${categoryInfo.id}`}
-                className={styles.crumbLink}
-              >
-                {categoryInfo.name}
-              </Link>
-            </>
-          )}
-          <span className={styles.crumbSeparator} aria-hidden="true">
-            /
-          </span>
-          <span className={styles.crumbCurrent} aria-current="page">
-            {product.name}
-          </span>
-        </nav>
-
         <div className={styles.productLayout}>
           {/* Dominant Minimal Studio Image Stage */}
           <div className={styles.galleryColumn}>

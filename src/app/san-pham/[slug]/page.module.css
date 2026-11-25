@@ -3,35 +3,6 @@
   padding-bottom: var(--space-3xl);
 }
 
-.breadcrumbs {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2xs);
-  font-size: var(--text-caption);
-  margin-bottom: var(--space-lg);
-  color: var(--text-secondary);
-}
-
-.crumbLink {
-  display: inline-flex;
-  align-items: center;
-  min-height: var(--tap-target);
-  color: var(--text-secondary);
-  text-decoration: none;
-  transition: color var(--transition-fast);
-}
-
-.crumbSeparator {
-  color: var(--text-secondary);
-  opacity: 0.6;
-}
-
-.crumbCurrent {
-  color: var(--text-primary);
-  font-weight: var(--font-weight-5);
-}
-
 .productLayout {
   display: grid;
   grid-template-columns: 1fr;
@@ -208,12 +179,6 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--space-md);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .crumbLink:hover {
-    color: var(--text-primary);
-  }
 }
 
 @media (min-width: 36rem) {

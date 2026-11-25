@@ -110,18 +110,17 @@
   justify-content: space-between;
   min-height: var(--tap-target-lg);
   padding: var(--space-xs) 0;
-  border-bottom: var(--border-size-1) solid var(--border-hairline);
   font-family: var(--font-family-display);
   font-size: var(--text-title);
   font-weight: var(--font-weight-6);
   letter-spacing: var(--tracking-heading);
-  color: var(--text-primary);
+  color: var(--text-secondary);
   text-decoration: none;
   transition: color var(--transition-fast);
 }
 
 .navLink[data-active='true'] {
-  color: var(--text-accent);
+  color: var(--text-primary);
 }
 
 .chevron {
@@ -191,7 +190,7 @@
   }
 
   .navLink:hover {
-    color: var(--text-accent);
+    color: var(--text-primary);
   }
 
   .categoryLink:hover {

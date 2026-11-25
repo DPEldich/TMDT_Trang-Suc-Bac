@@ -44,11 +44,12 @@ Sau khi khách hàng gửi biểu mẫu, cửa hàng sẽ liên hệ điện tho
 ## Cập nhật nội dung cửa hàng
 
 - [Danh mục sản phẩm](src/data/products.ts) chứa 51 mẫu trang sức thuộc 5 nhóm danh mục (Nhẫn: 11, Dây chuyền & Mặt dây: 15, Lắc & Vòng tay: 13, Bông tai: 11, Lắc chân: 1) và 3 nhóm chất liệu (Bạc: 20, Vàng: 30, Bạch kim: 1). Giá VNĐ và số lượng tồn kho là dữ liệu minh họa (synthetic demo data) phục vụ đồ án; cập nhật tại đây rồi build lại website.
-- Trang `/san-pham` lọc kết hợp theo danh mục và chất liệu (`Tất cả`, `Bạc`, `Vàng`, `Bạch kim`), sau đó phân trang cố định **12 sản phẩm/trang** theo thứ tự nguồn (tối đa 5 trang cho toàn bộ 51 sản phẩm: 12/12/12/12/3). Trạng thái bộ lọc và số trang được đồng bộ duy nhất qua tham số URL chuẩn `/san-pham?category=...&material=...&page=...` (lược bỏ giá trị mặc định và `page=1`; đổi bộ lọc tự đưa về trang 1 trong khi giữ bộ lọc hợp lệ còn lại; `page` không hợp lệ về trang 1 và `page` vượt phạm vi tự chuẩn hóa về trang cuối hợp lệ bằng `replace`).
-- Kiểm tra tự động dữ liệu và phân trang bằng:
+- Trang `/san-pham` hỗ trợ tìm kiếm theo tên/mã SKU (không phân biệt dấu tiếng Việt, `đ`/`d`, hoa/thường, khớp AND từng từ), lọc kết hợp theo danh mục, chất liệu (`Tất cả`, `Bạc`, `Vàng`, `Bạch kim`), khoảng giá VNĐ (`Giá từ`/`Giá đến`), trạng thái còn hàng và sắp xếp (`Mặc định`, `Giá: Thấp đến cao`, `Giá: Cao đến thấp`, `Tên: A–Z`), sau đó phân trang cố định **12 sản phẩm/trang** (tối đa 5 trang cho toàn bộ 51 sản phẩm: 12/12/12/12/3). Số lượng trên các thẻ danh mục phản ánh toàn bộ tiêu chí đang áp dụng ngoài danh mục. Toàn bộ trạng thái được đồng bộ duy nhất qua URL chuẩn `/san-pham?q=...&category=...&material=...&minPrice=...&maxPrice=...&inStock=1&sort=...&page=...` (lược bỏ giá trị mặc định và `page=1`; mọi thay đổi tìm kiếm/lọc/sắp xếp tự đưa về trang 1 trong khi giữ tiêu chí còn lại; tham số không hợp lệ hoặc vượt phạm vi tự chuẩn hóa bằng `replace`).
+- Kiểm tra tự động dữ liệu, phân trang và tìm kiếm nâng cao bằng:
   ```bash
   node tests/check-catalog-data.cjs
   node tests/check-catalog-pagination.cjs
+  node tests/check-catalog-search.cjs
   ```
 - Nút **Gửi đánh giá** mở Google Form phản hồi. Website đọc tab phản hồi liên kết, hiển thị họ tên, nội dung và ngày gửi theo thứ tự mới nhất trước. Dữ liệu được làm mới khi có lượt truy cập sau khoảng 60 giây.
 - [Tab phản hồi mặc định](https://docs.google.com/spreadsheets/d/1dDaTKjMiOZKnPY8-7N9Hav_4tcq-iOwG0aqHZzKmamo/edit#gid=1854474379) có quyền đọc qua liên kết. Nếu chuyển sang bảng khác có cùng tiêu đề cột, đặt `FEEDBACK_SPREADSHEET_ID` và `FEEDBACK_SHEET_ID` theo ID bảng và giá trị `gid` của tab phản hồi. Website dùng [danh sách dự phòng](src/data/feedback.ts) khi không đọc được tab.

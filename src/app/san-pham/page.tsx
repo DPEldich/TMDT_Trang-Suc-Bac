@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { Suspense } from 'react';
 import { Container } from '../../components/UI/Container';
 import { CatalogView } from '../../components/CatalogView';
@@ -24,6 +23,8 @@ function CatalogFallback() {
       aria-label="Đang tải danh sách sản phẩm"
     >
       <div className={styles.fallbackControls} aria-hidden="true">
+        <div className={styles.fallbackSearchTrigger} />
+
         <div className={styles.fallbackChips}>
           {SKELETON_CHIP_SLOTS.map((slot) => (
             <div key={slot} className={styles.fallbackChip} />
@@ -60,18 +61,6 @@ export default function ProductsPage() {
     <main id="main-content" className={styles.main}>
       <div className={styles.pageHeader}>
         <Container>
-          <nav className={styles.breadcrumbs} aria-label="Đường dẫn điều hướng">
-            <Link href="/" className={styles.crumbLink}>
-              Trang chủ
-            </Link>
-            <span className={styles.crumbSeparator} aria-hidden="true">
-              /
-            </span>
-            <span className={styles.crumbCurrent} aria-current="page">
-              Bộ sưu tập
-            </span>
-          </nav>
-
           <h1 className={styles.pageTitle}>Bộ sưu tập</h1>
         </Container>
       </div>

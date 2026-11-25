@@ -22,6 +22,357 @@
   margin-bottom: var(--space-md);
 }
 
+.searchSystem {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  min-width: 0;
+}
+
+.searchMorphShell {
+  position: relative;
+  display: grid;
+  grid-template-rows: 0fr;
+  width: var(--search-trigger-outer);
+  max-width: 100%;
+  min-height: var(--search-trigger-outer);
+  border-radius: var(--search-morph-radius-closed);
+  border: var(--border-size-1) solid var(--border-subtle);
+  background-color: var(--bg-store-glass);
+  box-shadow: var(--shadow-store-glass);
+  -webkit-backdrop-filter: blur(var(--blur-store-glass))
+    saturate(var(--saturation-store-glass));
+  backdrop-filter: blur(var(--blur-store-glass))
+    saturate(var(--saturation-store-glass));
+  transition:
+    width var(--search-morph-duration) var(--search-morph-ease),
+    grid-template-rows var(--search-morph-duration) var(--search-morph-ease),
+    border-radius var(--search-morph-duration) var(--search-morph-ease),
+    border-color var(--transition-fast),
+    box-shadow var(--search-morph-duration) var(--search-morph-ease);
+}
+
+.searchMorphShell[data-state='open'] {
+  grid-template-rows: 1fr;
+  width: 100%;
+  border-radius: var(--radius-lg);
+}
+
+.searchTrigger {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--search-trigger-size);
+  height: var(--search-trigger-size);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-full);
+  background-color: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: color var(--transition-fast);
+}
+
+.searchTrigger::before {
+  content: '';
+  position: absolute;
+  inset: var(--space-3xs);
+  border-radius: var(--radius-full);
+  background-color: transparent;
+  transition: background-color var(--transition-fast);
+}
+
+.searchTrigger[data-state='open'] {
+  color: var(--text-secondary);
+}
+
+.searchTrigger:focus-visible {
+  outline: var(--border-size-2) solid var(--border-focus);
+  outline-offset: var(--outline-offset-focus);
+}
+
+.searchTriggerIcon {
+  position: relative;
+  z-index: 1;
+  width: var(--icon-md);
+  height: var(--icon-md);
+  transition: transform var(--transition-fast);
+}
+
+.searchTrigger:active .searchTriggerIcon {
+  transform: scale(var(--scale-press));
+}
+
+.searchMorphClip {
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  visibility: hidden;
+  transition: visibility 0s linear var(--search-morph-duration);
+}
+
+.searchMorphShell[data-state='open'] .searchMorphClip {
+  visibility: visible;
+  transition: visibility 0s linear 0s;
+}
+
+.searchMorphInner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  opacity: 0;
+  transform: translateX(calc(var(--search-morph-content-offset) * -1));
+  transition:
+    padding var(--search-morph-duration) var(--search-morph-ease),
+    opacity var(--search-morph-content-exit-duration) var(--ease-interaction) 0s,
+    transform var(--search-morph-content-exit-duration) var(--ease-interaction) 0s;
+}
+
+.searchMorphShell[data-state='open'] .searchMorphInner {
+  padding: var(--space-3xs) var(--space-2xs) var(--space-xs) var(--space-2xs);
+  opacity: 1;
+  transform: translateX(0);
+  transition:
+    padding var(--search-morph-duration) var(--search-morph-ease),
+    opacity var(--search-morph-content-duration) var(--search-morph-ease)
+      var(--search-morph-content-delay),
+    transform var(--search-morph-content-duration) var(--search-morph-ease)
+      var(--search-morph-content-delay);
+}
+
+.searchBarRow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  width: 100%;
+  min-width: 0;
+}
+
+.searchControl {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.closeTrigger {
+  position: absolute;
+  top: var(--space-3xs);
+  right: var(--space-3xs);
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: var(--control-search-min-height);
+  height: var(--control-search-min-height);
+  min-width: var(--tap-target);
+  min-height: var(--tap-target);
+  padding: 0;
+  border: var(--border-size-1) solid transparent;
+  border-radius: var(--radius-full);
+  background-color: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.closeTrigger:focus-visible {
+  outline: var(--border-size-2) solid var(--border-focus);
+  outline-offset: var(--outline-offset-focus);
+}
+
+.closeTriggerIcon {
+  width: var(--icon-md);
+  height: var(--icon-md);
+  transition: transform var(--transition-fast);
+}
+
+.closeTrigger:active .closeTriggerIcon {
+  transform: scale(var(--scale-press));
+}
+
+.advancedCollapse {
+  display: grid;
+  grid-template-rows: 0fr;
+  width: 100%;
+  min-width: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    grid-template-rows var(--search-morph-duration) var(--search-morph-ease),
+    opacity var(--search-morph-content-exit-duration) var(--ease-interaction) 0s,
+    visibility 0s linear var(--search-morph-duration);
+}
+
+.advancedCollapse[data-state='open'] {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  visibility: visible;
+  transition:
+    grid-template-rows var(--search-morph-duration) var(--search-morph-ease),
+    opacity var(--search-morph-content-duration) var(--search-morph-ease)
+      var(--search-morph-content-delay),
+    visibility 0s linear 0s;
+}
+
+.advancedCollapseInner {
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.advancedPanelSpacing {
+  padding-top: var(--space-sm);
+}
+
+.topBarActions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  width: 100%;
+  min-width: 0;
+}
+
+.advancedToggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2xs);
+  min-height: var(--tap-target);
+  padding: var(--space-2xs) var(--space-sm);
+  border-radius: var(--radius-full);
+  border: var(--border-size-1) solid var(--border-subtle);
+  background-color: var(--bg-canvas);
+  color: var(--text-primary);
+  font-size: var(--text-small);
+  font-weight: var(--font-weight-5);
+  line-height: var(--leading-snug);
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.advancedToggle:active {
+  transform: scale(var(--scale-press));
+}
+
+.advancedToggle[data-state='open'],
+.advancedToggle[data-active='true'] {
+  border-color: var(--border-strong);
+  background-color: var(--bg-surface);
+}
+
+.advancedToggle:focus-visible {
+  outline: var(--border-size-2) solid var(--border-focus);
+  outline-offset: var(--outline-offset-focus);
+}
+
+.toggleIcon {
+  flex: 0 0 auto;
+  width: var(--icon-sm);
+  height: var(--icon-sm);
+  color: var(--text-secondary);
+}
+
+.activeBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--control-badge-min-size);
+  height: var(--control-badge-min-size);
+  padding: 0 var(--space-3xs);
+  border-radius: var(--radius-full);
+  background-color: var(--text-primary);
+  color: var(--text-inverse);
+  font-size: var(--text-caption);
+  font-weight: var(--font-weight-6);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.sortControl {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2xs) var(--space-xs);
+  min-width: 0;
+  max-width: 100%;
+}
+
+.sortLabel {
+  font-size: var(--text-small);
+  font-weight: var(--font-weight-5);
+  color: var(--text-secondary);
+  line-height: var(--leading-snug);
+  white-space: nowrap;
+}
+
+.sortSelectWrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  flex: 1 1 var(--control-sort-min-width);
+  min-width: 0;
+  max-width: 100%;
+}
+
+.sortSelect {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  min-height: var(--tap-target);
+  padding: var(--space-2xs)
+    calc(var(--space-sm) + var(--icon-sm) + var(--space-2xs)) var(--space-2xs)
+    var(--space-sm);
+  border-radius: var(--radius-full);
+  border: var(--border-size-1) solid var(--border-subtle);
+  background-color: var(--bg-canvas);
+  color: var(--text-primary);
+  font-size: var(--text-small);
+  font-weight: var(--font-weight-5);
+  line-height: var(--leading-snug);
+  cursor: pointer;
+  transition:
+    border-color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.sortSelect[data-active='true'] {
+  border-color: var(--border-strong);
+  background-color: var(--bg-surface);
+}
+
+.sortSelect:focus-visible {
+  outline: var(--border-size-2) solid var(--border-focus);
+  outline-offset: var(--outline-offset-focus);
+  border-color: var(--border-focus);
+}
+
+.sortChevron {
+  position: absolute;
+  right: var(--space-sm);
+  width: var(--icon-sm);
+  height: var(--icon-sm);
+  color: var(--text-secondary);
+  pointer-events: none;
+}
+
 .toolbarRow {
   display: flex;
   flex-direction: column;
@@ -65,7 +416,96 @@
   font-weight: var(--font-weight-6);
 }
 
+@media (hover: hover) and (pointer: fine) {
+  .searchMorphShell[data-state='closed']:hover {
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-store-glass-hover);
+  }
+
+  .searchTrigger[data-state='open']:hover {
+    color: var(--text-primary);
+  }
+
+  .searchTrigger[data-state='open']:hover::before {
+    background-color: var(--bg-surface);
+  }
+
+  .closeTrigger:hover {
+    color: var(--text-primary);
+    background-color: var(--bg-surface);
+  }
+
+  .advancedToggle:hover {
+    border-color: var(--border-strong);
+    background-color: var(--bg-surface);
+  }
+
+  .sortSelect:hover {
+    border-color: var(--border-strong);
+    background-color: var(--bg-surface);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .searchSystem,
+  .searchSystem *,
+  .searchSystem *::before,
+  .searchSystem *::after,
+  .searchMorphShell,
+  .searchMorphClip,
+  .searchMorphInner,
+  .searchMorphShell[data-state='open'] .searchMorphClip,
+  .searchMorphShell[data-state='open'] .searchMorphInner,
+  .advancedCollapse,
+  .advancedCollapse[data-state='open'],
+  .searchTrigger,
+  .searchTrigger::before,
+  .searchTriggerIcon,
+  .closeTrigger,
+  .closeTriggerIcon {
+    transition: none;
+  }
+
+  .searchMorphInner {
+    transform: none;
+  }
+}
+
+@media (min-width: 30rem) {
+  .searchControl {
+    padding-left: calc(var(--search-trigger-size) - var(--space-2xs));
+    padding-right: calc(var(--control-search-min-height) + var(--space-3xs));
+  }
+}
+
+@media (min-width: 36rem) {
+  .topBarActions {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .sortSelectWrapper {
+    flex: 0 0 auto;
+    min-width: var(--control-sort-min-width);
+  }
+}
+
 @media (min-width: 48rem) {
+  .searchMorphShell[data-state='open'] .searchMorphInner {
+    padding: var(--space-3xs) var(--space-xs) var(--space-xs) var(--space-xs);
+  }
+
+  .searchControl {
+    padding-left: calc(var(--search-trigger-size) - var(--space-xs));
+    padding-right: calc(var(--control-search-min-height) + var(--space-3xs));
+  }
+
+  .topBarActions {
+    flex-wrap: nowrap;
+  }
+
   .toolbarRow {
     flex-direction: row;
     align-items: center;
@@ -76,5 +516,44 @@
   .resultsBar {
     justify-content: flex-end;
     gap: var(--space-xs);
+  }
+}
+
+@media (min-width: 64rem) {
+  .searchMorphShell[data-state='open'] .searchMorphInner {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-2xs);
+    padding: var(--space-3xs) var(--space-3xs) var(--space-3xs)
+      var(--search-trigger-size);
+  }
+
+  .searchBarRow {
+    flex-direction: row;
+    align-items: center;
+    flex: 1 1 auto;
+    gap: var(--space-xs);
+  }
+
+  .searchControl {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .topBarActions {
+    flex: 0 0 auto;
+    width: auto;
+    gap: var(--space-2xs);
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+  }
+
+  .closeTrigger {
+    position: static;
+  }
+
+  .advancedToggle,
+  .sortSelect {
+    min-height: var(--control-search-min-height);
   }
 }
