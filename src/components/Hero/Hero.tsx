@@ -2,6 +2,7 @@ import { getAllProducts } from '../../data/products';
 import { Container } from '../UI/Container';
 import { LinkButton } from '../UI/Button';
 import { HERO_MESSAGES } from './heroMessageScramble';
+import { HeroBackdrop } from './HeroBackdrop';
 import { HeroMessages } from './HeroMessages';
 import styles from './Hero.module.css';
 
@@ -16,6 +17,7 @@ export function Hero() {
       aria-labelledby="hero-heading"
       data-hero-surface-anchor="true"
     >
+      <HeroBackdrop />
       <div className={styles.copyWash} aria-hidden="true" />
 
       <Container className={styles.container}>

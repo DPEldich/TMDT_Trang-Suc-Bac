@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState, type FocusEvent, type KeyboardEvent } from 'react';
 import { createPortal } from 'react-dom';
-import Link from 'next/link';
+import { CurtainLink } from './NavigationCurtain';
 import { usePathname } from 'next/navigation';
 import { CATEGORIES } from '../../types/product';
 import { Container } from '../UI/Container';
@@ -144,12 +144,12 @@ export function DesktopNav() {
           <div className={styles.menuColumn}>
             <p className={styles.groupLabel}>Khám phá bộ sưu tập</p>
             <ul className={styles.primaryLinks}>
-              <li><Link href="/san-pham" onClick={() => closeMenu()}>Tất cả trang sức</Link></li>
+              <li><CurtainLink href="/san-pham" onClick={() => closeMenu()}>Tất cả trang sức</CurtainLink></li>
               {CATEGORIES.map((category) => (
                 <li key={category.id}>
-                  <Link href={`/san-pham?category=${category.id}`} onClick={() => closeMenu()}>
+                  <CurtainLink href={`/san-pham?category=${category.id}`} onClick={() => closeMenu()}>
                     {category.name}
-                  </Link>
+                  </CurtainLink>
                 </li>
               ))}
             </ul>
@@ -157,15 +157,15 @@ export function DesktopNav() {
           <div className={styles.menuColumn}>
             <p className={styles.groupLabel}>Mua sắm</p>
             <ul className={styles.secondaryLinks}>
-              <li><Link href="/#featured-heading" onClick={() => closeMenu()}>Mẫu nổi bật</Link></li>
-              <li><Link href="/gio-hang" onClick={() => closeMenu()}>Giỏ hàng</Link></li>
+              <li><CurtainLink href="/#featured-heading" onClick={() => closeMenu()}>Mẫu nổi bật</CurtainLink></li>
+              <li><CurtainLink href="/gio-hang" onClick={() => closeMenu()}>Giỏ hàng</CurtainLink></li>
             </ul>
           </div>
           <div className={styles.menuColumn}>
             <p className={styles.groupLabel}>Tìm hiểu NFA</p>
             <ul className={styles.secondaryLinks}>
-              <li><Link href="/ve-chung-toi" onClick={() => closeMenu()}>Về chúng tôi</Link></li>
-              <li><Link href="/#feedback-heading" onClick={() => closeMenu()}>Đánh giá khách hàng</Link></li>
+              <li><CurtainLink href="/ve-chung-toi" onClick={() => closeMenu()}>Về chúng tôi</CurtainLink></li>
+              <li><CurtainLink href="/#feedback-heading" onClick={() => closeMenu()}>Đánh giá khách hàng</CurtainLink></li>
             </ul>
           </div>
         </Container>
@@ -211,7 +211,7 @@ export function DesktopNav() {
         }
 
         return (
-          <Link
+          <CurtainLink
             key={item.href}
             ref={item.href === '/ve-chung-toi' ? nextLinkRef : undefined}
             href={item.href}
@@ -221,7 +221,7 @@ export function DesktopNav() {
             onPointerEnter={() => closeMenu()}
           >
             {item.label}
-          </Link>
+          </CurtainLink>
         );
       })}
     </nav>

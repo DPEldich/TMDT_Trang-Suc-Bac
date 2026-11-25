@@ -1,13 +1,14 @@
 import Link from 'next/link';
 import { CATEGORIES } from '../../types/product';
 import { Container } from '../UI/Container';
+import { FooterReveal } from './FooterReveal';
 import styles from './Footer.module.css';
 
 export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className={styles.footer}>
+    <FooterReveal>
       <Container className={styles.container}>
 
         <div className={styles.grid}>
@@ -65,6 +66,6 @@ export function Footer() {
           <p className={styles.copyright}>© {year} NFA — Trang sức.</p>
         </div>
       </Container>
-    </footer>
+    </FooterReveal>
   );
 }

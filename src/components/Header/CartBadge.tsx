@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import { CurtainLink } from './NavigationCurtain';
 import { usePathname } from 'next/navigation';
 import { ShoppingBag } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
@@ -13,7 +13,7 @@ export function CartBadge() {
   const isCartPage = pathname === '/gio-hang';
 
   return (
-    <Link
+    <CurtainLink
       href="/gio-hang"
       className={styles.cartLink}
       data-active={isCartPage ? 'true' : 'false'}
@@ -25,6 +25,6 @@ export function CartBadge() {
       <span className={styles.badge} data-has-items={count > 0 ? 'true' : 'false'}>
         {count}
       </span>
-    </Link>
+    </CurtainLink>
   );
 }

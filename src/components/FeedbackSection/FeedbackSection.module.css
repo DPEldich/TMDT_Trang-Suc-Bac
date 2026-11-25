@@ -460,3 +460,18 @@
     transform: none;
   }
 }
+
+:global([data-home-seams='true']) .section {
+  background-image:
+    var(--home-seam-surface-feather),
+    var(--feedback-section-ambient);
+  background-origin: border-box;
+  background-repeat: no-repeat;
+  border-top-color: transparent;
+}
+
+@media (prefers-contrast: more) {
+  :global([data-home-seams='true']) .section {
+    border-top-color: var(--border-strong);
+  }
+}

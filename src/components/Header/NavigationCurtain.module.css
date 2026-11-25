@@ -1,0 +1,19 @@
+.curtain {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-category-modal) + 1);
+  background: linear-gradient(135deg, var(--bg-panel-midnight), var(--slate-12));
+  clip-path: polygon(0% 0%, 0% 0%, -16% 100%, 0% 100%);
+  pointer-events: none;
+}
+
+.curtain[data-navigation-curtain-active] {
+  display: block;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .curtain[data-navigation-curtain-active] {
+    display: none;
+  }
+}

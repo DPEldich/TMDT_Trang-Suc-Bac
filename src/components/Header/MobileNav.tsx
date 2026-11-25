@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import Link from 'next/link';
+import { CurtainLink } from './NavigationCurtain';
 import { usePathname } from 'next/navigation';
 import { Menu, X, ChevronRight } from 'lucide-react';
 import { CATEGORIES } from '../../types/product';
@@ -134,7 +134,7 @@ export function MobileNav() {
               : pathname === link.href;
 
             return (
-              <Link
+              <CurtainLink
                 key={link.href}
                 href={link.href}
                 className={styles.navLink}
@@ -144,7 +144,7 @@ export function MobileNav() {
               >
                 <span>{link.label}</span>
                 <ChevronRight className={styles.chevron} aria-hidden="true" />
-              </Link>
+              </CurtainLink>
             );
           })}
         </nav>
@@ -153,14 +153,14 @@ export function MobileNav() {
           <p className={styles.groupLabel}>Danh mục sản phẩm</p>
           <div className={styles.categoryLinks}>
             {CATEGORIES.map((category) => (
-              <Link
+              <CurtainLink
                 key={category.id}
                 href={`/san-pham?category=${category.id}`}
                 className={styles.categoryLink}
                 onClick={() => closeMenu(false)}
               >
                 {category.name}
-              </Link>
+              </CurtainLink>
             ))}
           </div>
         </div>

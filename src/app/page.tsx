@@ -25,7 +25,7 @@ export default function HomePage() {
   const categoryShowcaseItems = buildCategoryShowcaseItems(allProducts);
 
   return (
-    <main id="main-content" className={styles.main}>
+    <main id="main-content" className={styles.main} data-home-seams="true">
       {/* 1. Centered Product-Led Hero */}
       <Hero />
 

@@ -1,9 +1,34 @@
 .footer {
+  position: relative;
   margin-top: auto;
   background-color: var(--bg-surface);
   border-top: var(--border-size-1) solid var(--border-hairline);
+  overflow: clip;
+}
+
+.revealContent {
   padding-top: var(--space-xl);
   padding-bottom: var(--space-xl);
+}
+
+.footer[data-state='active'] .revealContent {
+  transform: translate3d(0, var(--footer-reveal-y, 0), 0)
+    scale(var(--footer-reveal-scale, 1));
+  transform-origin: center bottom;
+  opacity: var(--footer-reveal-opacity, 1);
+  will-change: transform, opacity;
+}
+
+.footer[data-state='active']:has(:focus-visible) .revealContent {
+  transform: none;
+  opacity: 1;
+}
+
+@supports not selector(:has(:focus-visible)) {
+  .footer[data-state='active']:focus-within .revealContent {
+    transform: none;
+    opacity: 1;
+  }
 }
 
 .container {
@@ -113,5 +138,23 @@
   .bottomBar {
     flex-direction: row;
     align-items: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer[data-state='active'] .revealContent {
+    transform: none;
+    opacity: 1;
+    will-change: auto;
+  }
+}
+
+:global(.pageWrapper):has([data-home-seams='true']) + .footer {
+  border-top-color: transparent;
+}
+
+@media (prefers-contrast: more) {
+  :global(.pageWrapper):has([data-home-seams='true']) + .footer {
+    border-top-color: var(--border-strong);
   }
 }

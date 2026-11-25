@@ -8,13 +8,41 @@
   flex-direction: column;
   justify-content: center;
   background-color: var(--bg-surface);
+  border-bottom: var(--border-size-1) solid var(--border-hairline);
+  padding-block-start: var(--hero-padding-top-mobile);
+  padding-block-end: var(--hero-padding-bottom);
+}
+
+.backdrop {
+  --hero-zoom-scale-max: var(--hero-zoom-scale-max-mobile);
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-hero-backdrop);
   background-image: url('../../../asset/A1.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  border-bottom: var(--border-size-1) solid var(--border-hairline);
-  padding-block-start: var(--hero-padding-top-mobile);
-  padding-block-end: var(--hero-padding-bottom);
+  transform-origin: center center;
+  pointer-events: none;
+}
+
+.backdrop[data-state='active'] {
+  transform: scale(
+    calc(
+      1 +
+        (var(--hero-zoom-scale-max) - 1) *
+        var(--hero-zoom-scale-progress, 0)
+    )
+  );
+  filter: blur(
+    calc(var(--hero-zoom-blur-max) * var(--hero-zoom-blur-progress, 0))
+  );
+  opacity: calc(
+    1 -
+      (1 - var(--hero-zoom-opacity-min)) *
+      var(--hero-zoom-fade-progress, 0)
+  );
+  will-change: transform, filter, opacity;
 }
 
 .copyWash {
@@ -92,13 +120,60 @@
   .heroSection {
     padding-block-start: var(--hero-padding-top-desktop);
   }
+
+  .backdrop {
+    --hero-zoom-scale-max: var(--hero-zoom-scale-max-desktop);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .backdrop,
+  .backdrop[data-state='active'] {
+    transform: none;
+    filter: none;
+    opacity: 1;
+    will-change: auto;
+  }
+
   .heading,
   .actionGroup {
     animation: none;
     opacity: 1;
     transform: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .backdrop,
+  .backdrop[data-state='active'] {
+    transform: none;
+    filter: none;
+    opacity: 1;
+    will-change: auto;
+  }
+}
+
+:global([data-home-seams='true']) .heroSection {
+  border-bottom-color: var(--bg-surface);
+}
+
+:global([data-home-seams='true']) .heroSection::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  height: var(--home-hero-seam-height);
+  z-index: var(--z-hero-wash);
+  background-image: var(--home-hero-seam-fade);
+  pointer-events: none;
+}
+
+@media (prefers-contrast: more) {
+  :global([data-home-seams='true']) .heroSection {
+    border-bottom-color: var(--border-strong);
+  }
+
+  :global([data-home-seams='true']) .heroSection::after {
+    display: none;
   }
 }

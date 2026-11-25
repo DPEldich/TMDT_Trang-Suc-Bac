@@ -720,6 +720,7 @@ export function CatalogView({ products }: CatalogViewProps) {
 
       <ProductGrid
         products={pagination.items}
+        searchQuery={q}
         headingAs="h3"
         emptyMessage={emptyMessage}
         resetLabel="Xóa tất cả"
