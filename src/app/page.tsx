@@ -1,72 +1,20 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { Suspense } from 'react';
-import { ArrowUpRight, ChevronRight } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { Hero } from '../components/Hero';
 import { Container } from '../components/UI/Container';
 import { FeaturedCoverflow } from '../components/FeaturedProducts';
+import {
+  CategoryShowcase,
+  buildCategoryShowcaseItems,
+} from '../components/CategoryShowcase';
 import { FeedbackSection } from '../components/FeedbackSection';
 import { getFeaturedProducts, getAllProducts } from '../data/products';
 import { getSheetFeedback } from '../data/sheetFeedback';
-import { CATEGORIES, type Product, type ProductCategory } from '../types/product';
 import styles from './page.module.css';
 
 async function LiveFeedback() {
   return <FeedbackSection feedbacks={await getSheetFeedback()} />;
-}
-
-type CategoryLayoutSlot =
-  | 'tall-primary'
-  | 'tall-secondary'
-  | 'wide-upper'
-  | 'compact-left'
-  | 'compact-right';
-
-type CategoryTone = 'midnight' | 'champagne' | 'pearl' | 'mist';
-
-interface CategoryShowcaseConfig {
-  previewId: string;
-  slot: CategoryLayoutSlot;
-  tone: CategoryTone;
-}
-
-const CATEGORY_SHOWCASE_CONFIG: Record<ProductCategory, CategoryShowcaseConfig> = {
-  nhan: {
-    previewId: 'prod-01',
-    slot: 'tall-primary',
-    tone: 'midnight',
-  },
-  'day-chuyen': {
-    previewId: 'prod-04',
-    slot: 'tall-secondary',
-    tone: 'champagne',
-  },
-  'lac-tay': {
-    previewId: 'prod-06',
-    slot: 'wide-upper',
-    tone: 'pearl',
-  },
-  'bong-tai': {
-    previewId: 'prod-08',
-    slot: 'compact-left',
-    tone: 'mist',
-  },
-  'lac-chan': {
-    previewId: 'prod-51',
-    slot: 'compact-right',
-    tone: 'champagne',
-  },
-};
-
-function getCategoryPreviewProduct(
-  categoryId: ProductCategory,
-  products: readonly Product[]
-): Product | undefined {
-  const preferredId = CATEGORY_SHOWCASE_CONFIG[categoryId].previewId;
-  return (
-    products.find((product) => product.id === preferredId) ??
-    products.find((product) => product.category === categoryId)
-  );
 }
 
 export default function HomePage() {
@@ -74,6 +22,7 @@ export default function HomePage() {
   const allProducts = getAllProducts();
   const displayHighlights =
     featured.length > 0 ? featured : allProducts.slice(0, 4);
+  const categoryShowcaseItems = buildCategoryShowcaseItems(allProducts);
 
   return (
     <main id="main-content" className={styles.main}>
@@ -123,7 +72,7 @@ export default function HomePage() {
         </Container>
       </section>
 
-      {/* 3. Asymmetric 5-Category Showcase */}
+      {/* 3. Editorial 5-Category Showcase */}
       <section
         className={styles.categorySection}
         aria-labelledby="categories-heading"
@@ -138,51 +87,7 @@ export default function HomePage() {
             </h2>
           </div>
 
-          <div className={styles.categoryGrid}>
-            {CATEGORIES.map((category) => {
-              const config = CATEGORY_SHOWCASE_CONFIG[category.id];
-              const previewProduct = getCategoryPreviewProduct(
-                category.id,
-                allProducts
-              );
-
-              return (
-                <Link
-                  key={category.id}
-                  href={`/san-pham?category=${category.id}`}
-                  className={styles.categoryTile}
-                  data-slot={config.slot}
-                  data-tone={config.tone}
-                >
-                  <div className={styles.categoryCopy}>
-                    <h3 className={styles.categoryTitle}>{category.name}</h3>
-                  </div>
-
-                  {previewProduct && (
-                    <div className={styles.categoryMedia}>
-                      <Image
-                        src={previewProduct.image}
-                        alt={previewProduct.imageAlt}
-                        width={300}
-                        height={300}
-                        sizes="(max-width: 48rem) 200px, (max-width: 64rem) 220px, 260px"
-                        loading="lazy"
-                        className={styles.categoryImage}
-                      />
-                    </div>
-                  )}
-
-                  <span className={styles.categoryCueCircle} aria-hidden="true">
-                    {config.tone === 'midnight' ? (
-                      <ArrowUpRight className={styles.cueIcon} />
-                    ) : (
-                      <ChevronRight className={styles.cueIcon} />
-                    )}
-                  </span>
-                </Link>
-              );
-            })}
-          </div>
+          <CategoryShowcase items={categoryShowcaseItems} />
         </Container>
       </section>
 

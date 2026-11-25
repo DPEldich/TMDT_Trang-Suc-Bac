@@ -301,7 +301,7 @@ async function main() {
   const assetEntries = new Set(fs.readdirSync(assetDir));
   const publicEntries = new Set(fs.readdirSync(publicDir));
 
-  assert.equal(assetEntries.size, 51, 'asset/ must contain 51 source images');
+  // asset/ also contains site backgrounds; verify every product source below.
   assert.equal(publicEntries.size, 51, 'public/products/ must contain 51 served images');
 
   for (const p of PRODUCTS) {

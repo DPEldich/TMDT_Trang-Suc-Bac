@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Container } from '../UI/Container';
+import { HeaderSurface } from './HeaderSurface';
 import { DesktopNav } from './DesktopNav';
 import { CartBadge } from './CartBadge';
 import { MobileNav } from './MobileNav';
@@ -7,7 +8,7 @@ import styles from './Header.module.css';
 
 export function Header() {
   return (
-    <header className={styles.header}>
+    <HeaderSurface className={styles.header}>
       <a href="#main-content" className={styles.skipLink}>
         Chuyển đến nội dung chính
       </a>
@@ -30,6 +31,6 @@ export function Header() {
           <MobileNav />
         </div>
       </Container>
-    </header>
+    </HeaderSurface>
   );
 }

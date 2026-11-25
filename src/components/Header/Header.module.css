@@ -9,6 +9,34 @@
   backdrop-filter: saturate(180%) blur(var(--blur-header));
 }
 
+.header[data-overlay='true'] {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.header[data-overlay='true'][data-transition-ready='true'] {
+  transition:
+    background-color var(--transition-header-surface),
+    border-bottom-color var(--transition-header-surface);
+}
+
+.header[data-overlay='true'][data-surface='transparent'] {
+  background-color: transparent;
+  border-bottom-color: transparent;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: none;
+}
+
+.header[data-overlay='true'][data-surface='transparent']:has(nav [aria-expanded='true']) {
+  background-color: var(--bg-header-glass);
+  border-bottom-color: var(--border-hairline);
+  -webkit-backdrop-filter: saturate(180%) blur(var(--blur-header));
+  backdrop-filter: saturate(180%) blur(var(--blur-header));
+}
+
 .skipLink {
   position: fixed;
   top: var(--space-2xs);
@@ -73,5 +101,12 @@
 @media (hover: hover) and (pointer: fine) {
   .brandLink:hover {
     opacity: 0.72;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header,
+  .header[data-overlay='true'][data-transition-ready='true'] {
+    transition: none;
   }
 }

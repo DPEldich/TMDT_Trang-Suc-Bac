@@ -1,0 +1,136 @@
+.messagesRoot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.messageStage {
+  display: grid;
+  width: 100%;
+  align-items: start;
+  justify-items: center;
+  animation: heroMessagesEnterUp var(--duration-enter) var(--ease-enter) var(--delay-enter-1) both;
+}
+
+.measureCopy {
+  grid-area: 1 / 1;
+  visibility: hidden;
+  pointer-events: none;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: var(--space-2xs);
+}
+
+.messageLive {
+  grid-area: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: var(--space-2xs);
+}
+
+.messageTitle {
+  font-family: var(--font-family-display);
+  font-size: var(--hero-message-title-size);
+  font-weight: var(--font-weight-5);
+  line-height: var(--leading-heading);
+  letter-spacing: var(--tracking-heading);
+  color: var(--text-primary);
+  text-wrap: balance;
+  margin: 0;
+  width: 100%;
+}
+
+.messageDescription {
+  font-family: var(--font-family-sans);
+  font-size: var(--hero-message-body-size);
+  font-weight: var(--font-weight-4);
+  line-height: var(--leading-body);
+  letter-spacing: var(--tracking-normal);
+  color: var(--text-secondary);
+  text-wrap: balance;
+  margin: 0;
+  width: 100%;
+}
+
+.word {
+  white-space: nowrap;
+}
+
+.glyphSlot {
+  position: relative;
+  display: inline;
+}
+
+.glyphSlot::before {
+  content: attr(data-glyph);
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.glyphLive {
+  position: absolute;
+  inset-inline-start: 50%;
+  inset-block-start: 50%;
+  transform: translate(-50%, -50%);
+  line-height: normal;
+  white-space: pre;
+  pointer-events: none;
+  transition: color var(--transition-fast);
+}
+
+.glyphLive[data-resolved='false'] {
+  color: var(--hero-scramble-glyph-color);
+}
+
+.messageLive[data-scrambling='false'] .glyphSlot::before {
+  display: none;
+}
+
+.messageLive[data-scrambling='false'] .glyphLive {
+  position: static;
+  inset: auto;
+  transform: none;
+  line-height: inherit;
+  pointer-events: auto;
+}
+
+.srOnly {
+  position: absolute;
+  width: var(--border-size-1);
+  height: var(--border-size-1);
+  padding: 0;
+  margin: calc(var(--border-size-1) * -1);
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+@keyframes heroMessagesEnterUp {
+  from {
+    opacity: 0;
+    transform: translateY(var(--enter-offset));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .messageStage {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .glyphLive {
+    transition: none;
+  }
+}

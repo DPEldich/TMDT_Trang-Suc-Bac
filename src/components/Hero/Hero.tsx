@@ -1,31 +1,30 @@
-import Image from 'next/image';
 import { getAllProducts } from '../../data/products';
-import { formatVND } from '../../utils/currency';
 import { Container } from '../UI/Container';
 import { LinkButton } from '../UI/Button';
+import { HERO_MESSAGES } from './heroMessageScramble';
+import { HeroMessages } from './HeroMessages';
 import styles from './Hero.module.css';
 
 export function Hero() {
   const products = getAllProducts();
   const heroProduct =
     products.find((product) => product.id === 'prod-02') ?? products[0];
-  const minPrice = products.reduce(
-    (lowest, product) => Math.min(lowest, product.price),
-    products[0]?.price ?? 0
-  );
 
   return (
-    <section className={styles.heroSection} aria-labelledby="hero-heading">
+    <section
+      className={styles.heroSection}
+      aria-labelledby="hero-heading"
+      data-hero-surface-anchor="true"
+    >
+      <div className={styles.copyWash} aria-hidden="true" />
+
       <Container className={styles.container}>
         <div className={styles.copyBlock}>
           <h1 id="hero-heading" className={styles.heading}>
             Trang sức NFA
           </h1>
 
-          <p className={styles.subtitle}>
-            Từ{' '}
-            <span className={styles.priceInline}>{formatVND(minPrice)}</span>.
-          </p>
+          <HeroMessages messages={HERO_MESSAGES} />
 
           <div className={styles.actionGroup}>
             <LinkButton href="/san-pham" size="lg" variant="primary">
@@ -36,27 +35,13 @@ export function Hero() {
                 href={`/san-pham/${heroProduct.slug}`}
                 size="lg"
                 variant="outline"
+                className={styles.secondaryCta}
               >
                 Xem chi tiết nhẫn viền đá
               </LinkButton>
             )}
           </div>
         </div>
-
-        {heroProduct && (
-          <div className={styles.visualStage}>
-            <Image
-              src={heroProduct.image}
-              alt={heroProduct.imageAlt}
-              width={300}
-              height={300}
-              preload
-              sizes="(max-width: 36rem) 240px, 300px"
-              className={styles.heroImage}
-            />
-            <span className={styles.floorShadow} aria-hidden="true" />
-          </div>
-        )}
       </Container>
     </section>
   );
