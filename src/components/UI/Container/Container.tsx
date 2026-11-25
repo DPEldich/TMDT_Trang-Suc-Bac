@@ -1,14 +1,18 @@
-import type { ReactNode } from 'react';
+import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import clsx from 'clsx';
 import styles from './Container.module.css';
 
-export interface ContainerProps {
+export interface ContainerProps extends ComponentPropsWithoutRef<'div'> {
   children: ReactNode;
-  className?: string;
   size?: 'default' | 'narrow' | 'wide';
 }
 
-export function Container({ children, className, size = 'default' }: ContainerProps) {
+export function Container({
+  children,
+  className,
+  size = 'default',
+  ...rest
+}: ContainerProps) {
   return (
     <div
       className={clsx(
@@ -17,6 +21,7 @@ export function Container({ children, className, size = 'default' }: ContainerPr
         size === 'wide' && styles.wide,
         className
       )}
+      {...rest}
     >
       {children}
     </div>

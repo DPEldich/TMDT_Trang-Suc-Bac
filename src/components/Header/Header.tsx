@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Container } from '../UI/Container';
+import { DesktopNav } from './DesktopNav';
 import { CartBadge } from './CartBadge';
 import { MobileNav } from './MobileNav';
 import styles from './Header.module.css';
@@ -7,25 +8,22 @@ import styles from './Header.module.css';
 export function Header() {
   return (
     <header className={styles.header}>
+      <a href="#main-content" className={styles.skipLink}>
+        Chuyển đến nội dung chính
+      </a>
+
       <Container className={styles.container}>
         <div className={styles.brandWrapper}>
-          <Link href="/" className={styles.brandLink}>
+          <Link
+            href="/"
+            className={styles.brandLink}
+            aria-label="NFA — Trang sức, về trang chủ"
+          >
             <span className={styles.brandName}>NFA</span>
-            <span className={styles.brandTagline}>Trang sức bạc</span>
           </Link>
         </div>
 
-        <nav className={styles.desktopNav} aria-label="Điều hướng chính">
-          <Link href="/" className={styles.navLink}>
-            Trang chủ
-          </Link>
-          <Link href="/san-pham" className={styles.navLink}>
-            Bộ sưu tập
-          </Link>
-          <Link href="/ve-chung-toi" className={styles.navLink}>
-            Về chúng tôi
-          </Link>
-        </nav>
+        <DesktopNav />
 
         <div className={styles.actions}>
           <CartBadge />

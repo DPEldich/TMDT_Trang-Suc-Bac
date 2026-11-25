@@ -1,6 +1,6 @@
-# NFA — Trang Sức Bạc
+# NFA — Trang Sức
 
-Storefront trang sức bạc phục vụ đồ án môn học Thương mại điện tử.
+Storefront trang sức NFA phục vụ đồ án môn học Thương mại điện tử.
 
 ## Cài đặt và chạy
 
@@ -43,7 +43,13 @@ Sau khi khách hàng gửi biểu mẫu, cửa hàng sẽ liên hệ điện tho
 
 ## Cập nhật nội dung cửa hàng
 
-- [Danh mục sản phẩm](src/data/products.ts) chứa 8 mẫu minh họa. Cập nhật giá VNĐ và tồn kho tại đây rồi build lại website.
+- [Danh mục sản phẩm](src/data/products.ts) chứa 51 mẫu trang sức thuộc 5 nhóm danh mục (Nhẫn: 11, Dây chuyền & Mặt dây: 15, Lắc & Vòng tay: 13, Bông tai: 11, Lắc chân: 1) và 3 nhóm chất liệu (Bạc: 20, Vàng: 30, Bạch kim: 1). Giá VNĐ và số lượng tồn kho là dữ liệu minh họa (synthetic demo data) phục vụ đồ án; cập nhật tại đây rồi build lại website.
+- Trang `/san-pham` lọc kết hợp theo danh mục và chất liệu (`Tất cả`, `Bạc`, `Vàng`, `Bạch kim`), sau đó phân trang cố định **12 sản phẩm/trang** theo thứ tự nguồn (tối đa 5 trang cho toàn bộ 51 sản phẩm: 12/12/12/12/3). Trạng thái bộ lọc và số trang được đồng bộ duy nhất qua tham số URL chuẩn `/san-pham?category=...&material=...&page=...` (lược bỏ giá trị mặc định và `page=1`; đổi bộ lọc tự đưa về trang 1 trong khi giữ bộ lọc hợp lệ còn lại; `page` không hợp lệ về trang 1 và `page` vượt phạm vi tự chuẩn hóa về trang cuối hợp lệ bằng `replace`).
+- Kiểm tra tự động dữ liệu và phân trang bằng:
+  ```bash
+  node tests/check-catalog-data.cjs
+  node tests/check-catalog-pagination.cjs
+  ```
 - Nút **Gửi đánh giá** mở Google Form phản hồi. Website đọc tab phản hồi liên kết, hiển thị họ tên, nội dung và ngày gửi theo thứ tự mới nhất trước. Dữ liệu được làm mới khi có lượt truy cập sau khoảng 60 giây.
 - [Tab phản hồi mặc định](https://docs.google.com/spreadsheets/d/1dDaTKjMiOZKnPY8-7N9Hav_4tcq-iOwG0aqHZzKmamo/edit#gid=1854474379) có quyền đọc qua liên kết. Nếu chuyển sang bảng khác có cùng tiêu đề cột, đặt `FEEDBACK_SPREADSHEET_ID` và `FEEDBACK_SHEET_ID` theo ID bảng và giá trị `gid` của tab phản hồi. Website dùng [danh sách dự phòng](src/data/feedback.ts) khi không đọc được tab.
 

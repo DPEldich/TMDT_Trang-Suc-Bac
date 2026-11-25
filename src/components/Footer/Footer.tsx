@@ -1,24 +1,27 @@
 import Link from 'next/link';
+import { CATEGORIES } from '../../types/product';
 import { Container } from '../UI/Container';
 import styles from './Footer.module.css';
 
 export function Footer() {
+  const year = new Date().getFullYear();
+
   return (
     <footer className={styles.footer}>
       <Container className={styles.container}>
+
         <div className={styles.grid}>
           <div className={styles.columnBrand}>
-            <span className={styles.brandTitle}>NFA Trang Sức Bạc</span>
+            <Link href="/" className={styles.brandTitle}>
+              NFA
+            </Link>
             <p className={styles.brandDesc}>
-              Cửa hàng trực tuyến giới thiệu các sản phẩm trang sức bạc với hình ảnh chụp thực tế và thông tin rõ ràng.
-            </p>
-            <p className={styles.academicNote}>
-              Đồ án môn học Thương mại điện tử.
+              Trang sức NFA.
             </p>
           </div>
 
-          <div className={styles.columnLinks}>
-            <span className={styles.sectionHeading}>Điều hướng</span>
+          <div className={styles.column}>
+            <p className={styles.columnHeading}>Cửa hàng</p>
             <ul className={styles.linkList}>
               <li>
                 <Link href="/" className={styles.link}>
@@ -31,41 +34,35 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/ve-chung-toi" className={styles.link}>
-                  Về chúng tôi
-                </Link>
-              </li>
-              <li>
                 <Link href="/gio-hang" className={styles.link}>
                   Giỏ hàng
                 </Link>
               </li>
+              <li>
+                <Link href="/ve-chung-toi" className={styles.link}>
+                  Về chúng tôi
+                </Link>
+              </li>
             </ul>
           </div>
 
-          <div className={styles.columnLinks}>
-            <span className={styles.sectionHeading}>Quy trình đặt hàng</span>
+          <div className={styles.column}>
+            <p className={styles.columnHeading}>Danh mục</p>
             <ul className={styles.linkList}>
-              <li>
-                <span className={styles.staticInfo}>1. Chọn sản phẩm vào giỏ</span>
-              </li>
-              <li>
-                <span className={styles.staticInfo}>2. Gửi thông tin qua biểu mẫu</span>
-              </li>
-              <li>
-                <span className={styles.staticInfo}>3. Cửa hàng liên hệ xác nhận</span>
-              </li>
+              {CATEGORIES.map((category) => (
+                <li key={category.id}>
+                  <Link href={`/san-pham?category=${category.id}`} className={styles.link}>
+                    {category.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
+
         </div>
 
         <div className={styles.bottomBar}>
-          <p className={styles.copyright}>
-            © {new Date().getFullYear()} NFA Jewelry. Dữ liệu giá và số lượng là dữ liệu demo phục vụ học tập.
-          </p>
-          <p className={styles.membersCredit}>
-            Nhóm 8 thành viên sinh viên TMĐT.
-          </p>
+          <p className={styles.copyright}>© {year} NFA — Trang sức.</p>
         </div>
       </Container>
     </footer>

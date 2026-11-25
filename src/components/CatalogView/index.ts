@@ -1,2 +1,12 @@
-export { CatalogView } from './CatalogView';
-export type { CatalogViewProps } from './CatalogView';
+export {
+  CatalogView,
+  parseCategoryParam,
+  parseMaterialParam,
+  parsePageParam,
+  buildCatalogHref,
+} from './CatalogView';
+export type {
+  CatalogViewProps,
+  CatalogCategoryFilter,
+  CatalogMaterialFilter,
+} from './CatalogView';

@@ -1,26 +1,26 @@
 .cartLink {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: var(--space-2xs);
-  padding: var(--space-2xs) var(--space-sm);
+  min-width: var(--tap-target);
+  min-height: var(--tap-target);
+  padding: 0 var(--space-xs);
   border-radius: var(--radius-full);
   color: var(--text-primary);
   text-decoration: none;
-  font-size: var(--font-size-1);
+  font-size: var(--text-small);
   font-weight: var(--font-weight-5);
-  border: var(--border-size-1) solid var(--border-subtle);
-  background-color: var(--bg-surface);
-  transition: background-color var(--transition-fast), border-color var(--transition-fast);
+  transition: background-color var(--transition-fast), color var(--transition-fast);
 }
 
-.cartLink:hover {
-  background-color: var(--bg-subtle);
-  border-color: var(--border-strong);
+.cartLink[data-active='true'] {
+  background-color: var(--bg-surface);
 }
 
 .icon {
-  width: var(--size-4);
-  height: var(--size-4);
+  width: var(--icon-md);
+  height: var(--icon-md);
   flex-shrink: 0;
   stroke-width: 1.75;
 }
@@ -33,19 +33,31 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: var(--size-4);
-  height: var(--size-4);
+  min-width: var(--icon-md);
+  height: var(--icon-md);
   padding: 0 var(--space-3xs);
   border-radius: var(--radius-full);
-  background-color: var(--accent-primary);
-  color: var(--accent-primary-contrast);
-  font-size: var(--font-size-00);
+  background-color: var(--bg-surface-strong);
+  color: var(--text-secondary);
+  font-size: var(--text-caption);
   font-weight: var(--font-weight-6);
   font-variant-numeric: tabular-nums;
-  line-height: var(--font-lineheight-1);
+  line-height: var(--leading-hero);
+  transition: background-color var(--transition-fast), color var(--transition-fast);
 }
 
-@media (min-width: 40rem) {
+.badge[data-has-items='true'] {
+  background-color: var(--accent-primary);
+  color: var(--accent-primary-contrast);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cartLink:hover {
+    background-color: var(--bg-surface);
+  }
+}
+
+@media (min-width: 48rem) {
   .label {
     display: inline;
   }

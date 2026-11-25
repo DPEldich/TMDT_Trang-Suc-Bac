@@ -1,15 +1,17 @@
 @import "open-props/style" layer(open-props);
 @import "@radix-ui/colors/slate.css";
-@import "@radix-ui/colors/sand.css";
 @import "@radix-ui/colors/gray.css";
-@import "@radix-ui/colors/indigo.css";
+@import "@radix-ui/colors/blue.css";
 @import "@radix-ui/colors/red.css";
 @import "@radix-ui/colors/green.css";
 @import "@radix-ui/colors/amber.css";
+@import "@radix-ui/colors/gray-alpha.css";
+@import "@radix-ui/colors/blue-alpha.css";
+@import "@radix-ui/colors/white-alpha.css";
+@import "@radix-ui/colors/black-alpha.css";
 @import "@radix-ui/colors/slate-dark.css";
-@import "@radix-ui/colors/sand-dark.css";
 @import "@radix-ui/colors/gray-dark.css";
-@import "@radix-ui/colors/indigo-dark.css";
+@import "@radix-ui/colors/blue-dark.css";
 @import "@radix-ui/colors/red-dark.css";
 @import "@radix-ui/colors/green-dark.css";
 @import "@radix-ui/colors/amber-dark.css";
@@ -19,38 +21,54 @@
 .dark,
 .light-theme,
 .dark-theme {
-  /* Surface and Background - Warm Ivory / Contemporary Minimalist Palette */
-  --bg-canvas: var(--sand-1);
-  --bg-surface: var(--sand-2);
-  --bg-surface-elevated: var(--sand-1);
-  --bg-subtle: var(--sand-3);
-  --bg-muted: var(--sand-4);
-  --bg-card: var(--sand-2);
-  --bg-card-hover: var(--sand-3);
-  --bg-badge: var(--sand-3);
+  /* Surface & Canvas — Apple-inspired crisp white and cool studio gray */
+  --bg-canvas: var(--slate-1);
+  --bg-surface: color-mix(in srgb, var(--slate-2) 45%, var(--slate-3));
+  --bg-surface-strong: var(--slate-3);
+  --bg-surface-elevated: var(--slate-1);
+  --bg-subtle: var(--slate-3);
+  --bg-muted: var(--slate-4);
+  --bg-card: var(--slate-1);
+  --bg-card-hover: var(--slate-2);
+  --bg-badge: var(--slate-3);
+  --bg-header-glass: color-mix(in srgb, var(--slate-1) 82%, transparent);
+  --bg-backdrop: var(--black-a6);
+  --bg-navigation-backdrop: var(--gray-a3);
+  --bg-accent-subtle: var(--blue-2);
+  --bg-accent-hover: var(--blue-3);
+  --stage-floor-shadow: radial-gradient(
+    ellipse at center,
+    var(--gray-a4) 0%,
+    transparent 68%
+  );
 
-  /* Typography / Text - Deep Charcoal & Muted Slate */
-  --text-primary: var(--sand-12);
-  --text-secondary: var(--sand-11);
-  --text-tertiary: var(--sand-10);
-  --text-muted: var(--sand-9);
-  --text-inverse: var(--sand-1);
+  /* Typography & Ink — Deep charcoal and accessible cool neutral gray */
+  --text-primary: var(--slate-12);
+  --text-secondary: var(--slate-11);
+  --text-tertiary: var(--slate-11);
+  --text-muted: var(--slate-10);
+  --text-inverse: var(--slate-1);
+  --text-accent: var(--blue-11);
+  --text-accent-hover: color-mix(in srgb, var(--blue-11) 76%, var(--blue-12));
 
-  /* Brand Accents - Understated Charcoal and Muted Silver */
-  --accent-primary: var(--sand-12);
-  --accent-primary-hover: var(--sand-11);
-  --accent-primary-contrast: var(--sand-1);
+  /* Brand & Action Accents — Accessible Apple Blue */
+  --accent-primary: var(--blue-11);
+  --accent-primary-hover: color-mix(in srgb, var(--blue-11) 82%, var(--blue-12));
+  --accent-primary-active: color-mix(in srgb, var(--blue-11) 68%, var(--blue-12));
+  --accent-primary-contrast: var(--slate-1);
   --accent-silver: var(--slate-8);
   --accent-silver-light: var(--slate-4);
   --accent-silver-subtle: var(--slate-3);
 
-  /* Borders & Dividers */
-  --border-subtle: var(--sand-6);
-  --border-card: var(--sand-5);
-  --border-strong: var(--sand-8);
-  --border-focus: var(--sand-12);
+  /* Neutral Borders & Dividers */
+  --border-hairline: var(--gray-a4);
+  --border-subtle: var(--slate-5);
+  --border-card: var(--gray-a4);
+  --border-strong: var(--slate-7);
+  --border-accent: var(--blue-7);
+  --border-focus: var(--blue-11);
 
-  /* Feedback & State */
+  /* Feedback & Semantic States */
   --text-danger: var(--red-11);
   --bg-danger-subtle: var(--red-2);
   --border-danger: var(--red-6);
@@ -63,39 +81,110 @@
   --bg-warning-subtle: var(--amber-2);
   --border-warning: var(--amber-6);
 
-  /* Spacing Scale (Open Props mapped to semantic names) */
+  /* Unified Inter Typography System */
+  --font-display: var(--font-sans);
+  --font-family-sans: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-family-display: var(--font-display), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-family-mono: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Fluid Type Scale (Vietnamese-friendly line heights and tight display tracking) */
+  --text-hero: clamp(2.25rem, 1.45rem + 3vw, 4rem);
+  --text-display: clamp(1.75rem, 1.3rem + 1.8vw, 2.875rem);
+  --text-section: clamp(1.5rem, 1.18rem + 1.15vw, 2.25rem);
+  --text-title: clamp(1.125rem, 1.04rem + 0.35vw, 1.375rem);
+  --text-lead: clamp(1.0625rem, 0.98rem + 0.32vw, 1.25rem);
+  --text-body: 1rem;
+  --text-small: 0.875rem;
+  --text-caption: 0.8125rem;
+
+  --leading-hero: 1.12;
+  --leading-display: 1.16;
+  --leading-heading: 1.24;
+  --leading-snug: 1.38;
+  --leading-body: 1.56;
+
+  --tracking-hero: -0.03em;
+  --tracking-display: -0.025em;
+  --tracking-heading: -0.016em;
+  --tracking-normal: -0.006em;
+  --tracking-wide: 0.02em;
+
+  /* Spacing Scale (4pt / 8pt grid built on Open Props) */
   --space-3xs: var(--size-1);
   --space-2xs: var(--size-2);
-  --space-xs: var(--size-2);
+  --space-xs: 0.75rem;
   --space-sm: var(--size-3);
-  --space-md: var(--size-4);
-  --space-lg: var(--size-5);
-  --space-xl: var(--size-7);
+  --space-md: var(--size-5);
+  --space-lg: var(--size-7);
+  --space-xl: var(--size-8);
   --space-2xl: var(--size-9);
-  --space-3xl: var(--size-11);
+  --space-3xl: var(--size-10);
+  --space-4xl: 6.5rem;
 
   /* Border Radii */
-  --radius-xs: var(--radius-1);
-  --radius-sm: var(--radius-2);
+  --radius-xs: 0.375rem;
+  --radius-sm: 0.625rem;
   --radius-md: var(--radius-3);
-  --radius-lg: var(--radius-4);
+  --radius-lg: 1.375rem;
+  --radius-xl: 1.75rem;
   --radius-full: var(--radius-round);
 
-  /* Shadows */
+  /* Elevation & Glass Blur */
   --shadow-subtle: var(--shadow-1);
   --shadow-surface: var(--shadow-2);
-  --shadow-card-hover: var(--shadow-3);
+  --shadow-card-hover: 0 0.75rem 2rem -0.5rem var(--gray-a4), 0 0.125rem 0.375rem -0.0625rem var(--gray-a3);
+  --shadow-sheet: 0 1.25rem 3rem -0.5rem var(--gray-a6);
+  --blur-header: var(--size-4);
+  --blur-backdrop: var(--size-2);
+  --blur-navigation-backdrop: var(--size-4);
 
-  /* Motion & Easing */
-  --ease-interaction: var(--ease-out-2);
-  --transition-fast: 150ms var(--ease-interaction);
-  --transition-normal: 250ms var(--ease-interaction);
+  /* Motion & Quiet Micro-Interactions */
+  --ease-interaction: var(--ease-out-3);
+  --ease-enter: var(--ease-out-4);
+  --transition-fast: 160ms var(--ease-interaction);
+  --transition-normal: 260ms var(--ease-interaction);
+  --transition-media: 480ms var(--ease-enter);
+  --duration-enter: 540ms;
+  --duration-enter-media: 700ms;
+  --delay-enter-1: 70ms;
+  --delay-enter-2: 140ms;
+  --delay-enter-3: 200ms;
+  --lift-card: -0.125rem;
+  --lift-button: -0.0625rem;
+  --nudge-arrow: 0.1875rem;
+  --enter-offset: 0.875rem;
+  --scale-media-hover: 1.03;
+  --scale-press: 0.985;
 
-  /* Layout dimensions */
-  --layout-max-width: 72rem;
-  --layout-narrow-width: 48rem;
-  --layout-header-height: 4.5rem;
+  /* Layout, Touch Targets & Honest 300x300 Media Sizing */
+  --layout-max-width: 75rem;
+  --layout-narrow-width: 46rem;
+  --layout-header-height: 3.5rem;
+  --tap-target: 2.75rem;
+  --tap-target-lg: 3rem;
+  --control-qty-width: 8.75rem;
+  --control-select-min-width: 11rem;
+  --icon-xs: 0.875rem;
+  --icon-sm: 1rem;
+  --icon-md: 1.25rem;
+  --icon-lg: 1.5rem;
+  --dot-size: 0.4375rem;
   --product-image-ratio: 1 / 1;
+  --media-hero-size: 18.75rem;
+  --media-detail-size: 18.75rem;
+  --media-card-size: 14.5rem;
+  --media-category-size: 10.5rem;
+  --media-thumb-size: 5.5rem;
+  --media-stage-min: 20rem;
+  --stage-shadow-width: 11rem;
+  --stage-shadow-height: 1.25rem;
+  --skeleton-bar-sm: 0.875rem;
+  --skeleton-bar-md: 1.25rem;
+  --skeleton-bar-lg: 2.75rem;
+  --outline-offset-focus: 0.125rem;
+  --z-header: 40;
+  --z-drawer: 50;
+  --z-skip: 60;
 }
 
 :root,

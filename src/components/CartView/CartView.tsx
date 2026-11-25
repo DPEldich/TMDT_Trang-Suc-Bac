@@ -2,7 +2,14 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { ShoppingBag, Trash2, Plus, Minus, ExternalLink } from 'lucide-react';
+import {
+  ShoppingBag,
+  Trash2,
+  Plus,
+  Minus,
+  ExternalLink,
+  ChevronRight,
+} from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { formatVND } from '../../utils/currency';
 import { buildCheckoutUrl } from '../../utils/googleForms';
@@ -10,12 +17,26 @@ import { LinkButton } from '../UI/Button';
 import styles from './CartView.module.css';
 
 export function CartView() {
-  const { items, totalItems, subtotal, isHydrated, updateQuantity, removeItem, clearCart } = useCart();
+  const {
+    items,
+    totalItems,
+    subtotal,
+    isHydrated,
+    updateQuantity,
+    removeItem,
+    clearCart,
+  } = useCart();
 
   if (!isHydrated) {
     return (
-      <div className={styles.loadingWrapper} aria-busy="true">
-        <p className={styles.loadingText}>Đang tải giỏ hàng...</p>
+      <div className={styles.skeletonLayout} aria-busy="true" role="status">
+        <div className={styles.skeletonColumn}>
+          <div className={styles.skeletonBarLg} aria-hidden="true" />
+          <div className={styles.skeletonRow} aria-hidden="true" />
+          <div className={styles.skeletonRow} aria-hidden="true" />
+        </div>
+        <div className={styles.skeletonSummary} aria-hidden="true" />
+        <span className={styles.srOnly}>Đang tải giỏ hàng...</span>
       </div>
     );
   }
@@ -26,13 +47,10 @@ export function CartView() {
         <div className={styles.emptyIconCircle}>
           <ShoppingBag className={styles.emptyIcon} aria-hidden="true" />
         </div>
-        <h2 className={styles.emptyTitle}>Giỏ hàng của bạn đang trống</h2>
-        <p className={styles.emptyDesc}>
-          Hiện tại bạn chưa chọn món trang sức nào.
-        </p>
+        <h2 className={styles.emptyTitle}>Giỏ hàng đang trống</h2>
         <div className={styles.emptyActions}>
           <LinkButton href="/san-pham" variant="primary" size="lg">
-            Xem sản phẩm
+            Xem bộ sưu tập
           </LinkButton>
         </div>
       </div>
@@ -43,11 +61,11 @@ export function CartView() {
 
   return (
     <div className={styles.cartLayout}>
-      {/* Left Column: Items List */}
-      <div className={styles.itemsColumn}>
+      {/* Left Column: Tidy Item Rows */}
+      <section className={styles.itemsColumn} aria-labelledby="cart-items-heading">
         <div className={styles.itemsHeader}>
-          <h2 className={styles.sectionTitle}>
-            Danh sách món hàng ({totalItems})
+          <h2 id="cart-items-heading" className={styles.sectionTitle}>
+            Sản phẩm đã chọn ({totalItems})
           </h2>
           <button
             type="button"
@@ -66,45 +84,47 @@ export function CartView() {
             const isMaxStock = quantity >= product.stock;
 
             return (
-              <div key={product.id} className={styles.itemRow}>
-                <div className={styles.itemThumbnailWrapper}>
+              <article key={product.id} className={styles.itemRow}>
+                <Link
+                  href={`/san-pham/${product.slug}`}
+                  className={styles.itemThumbnailLink}
+                  aria-label={`Xem chi tiết ${product.name}`}
+                >
                   <Image
                     src={product.image}
                     alt={product.imageAlt}
-                    width={100}
-                    height={100}
+                    width={300}
+                    height={300}
+                    sizes="88px"
                     className={styles.itemThumbnail}
                   />
-                </div>
+                </Link>
 
                 <div className={styles.itemInfo}>
-                  <div className={styles.itemHeader}>
+                  <div className={styles.itemTop}>
                     <div className={styles.itemTitleGroup}>
-                      <span className={styles.itemSku}>{product.sku}</span>
                       <h3 className={styles.itemName}>
-                        <Link href={`/san-pham/${product.slug}`} className={styles.itemLink}>
+                        <Link
+                          href={`/san-pham/${product.slug}`}
+                          className={styles.itemLink}
+                        >
                           {product.name}
                         </Link>
                       </h3>
+                      <p className={styles.itemSubMeta}>
+                        <span className={styles.unitPrice}>
+                          {formatVND(product.price)} / món
+                        </span>
+                        <span aria-hidden="true">·</span>
+                        <span className={styles.stockNotice}>
+                          Còn {product.stock} sản phẩm
+                        </span>
+                      </p>
                     </div>
 
-                    <button
-                      type="button"
-                      className={styles.removeBtn}
-                      onClick={() => removeItem(product.id)}
-                      aria-label={`Xóa ${product.name} khỏi giỏ hàng`}
-                    >
-                      <Trash2 className={styles.removeIcon} aria-hidden="true" />
-                    </button>
-                  </div>
-
-                  <div className={styles.itemMeta}>
-                    <span className={styles.unitPrice}>
-                      Đơn giá: {formatVND(product.price)}
-                    </span>
-                    <span className={styles.stockNotice}>
-                      (Kho còn {product.stock})
-                    </span>
+                    <p className={styles.lineTotalValue}>
+                      {formatVND(itemTotal)}
+                    </p>
                   </div>
 
                   <div className={styles.itemActions}>
@@ -118,12 +138,15 @@ export function CartView() {
                         className={styles.qtyBtn}
                         onClick={() => updateQuantity(product.id, quantity - 1)}
                         disabled={quantity <= 1}
-                        aria-label="Giảm 1 sản phẩm"
+                        aria-label={`Giảm 1 ${product.name}`}
                       >
                         <Minus className={styles.qtyIcon} aria-hidden="true" />
                       </button>
 
-                      <span className={styles.qtyValue} aria-label={`Số lượng: ${quantity}`}>
+                      <span
+                        className={styles.qtyValue}
+                        aria-label={`Số lượng hiện tại: ${quantity}`}
+                      >
                         {quantity}
                       </span>
 
@@ -132,55 +155,61 @@ export function CartView() {
                         className={styles.qtyBtn}
                         onClick={() => updateQuantity(product.id, quantity + 1)}
                         disabled={isMaxStock}
-                        aria-label="Tăng 1 sản phẩm"
+                        aria-label={`Tăng 1 ${product.name}`}
                       >
                         <Plus className={styles.qtyIcon} aria-hidden="true" />
                       </button>
                     </div>
 
-                    <div className={styles.lineTotalWrapper}>
-                      <span className={styles.lineTotalLabel}>Thành tiền:</span>
-                      <span className={styles.lineTotalValue}>{formatVND(itemTotal)}</span>
-                    </div>
+                    <button
+                      type="button"
+                      className={styles.removeBtn}
+                      onClick={() => removeItem(product.id)}
+                      aria-label={`Xóa ${product.name} khỏi giỏ hàng`}
+                    >
+                      <Trash2 className={styles.removeIcon} aria-hidden="true" />
+                      <span>Xóa</span>
+                    </button>
                   </div>
 
                   {isMaxStock && (
-                    <p className={styles.stockLimitWarn}>
+                    <p className={styles.stockLimitWarn} role="status">
                       Đã đạt giới hạn tồn kho ({product.stock} sản phẩm).
                     </p>
                   )}
                 </div>
-              </div>
+              </article>
             );
           })}
         </div>
-      </div>
+      </section>
 
       {/* Right Column: Order Summary & Checkout */}
-      <div className={styles.summaryColumn}>
+      <aside className={styles.summaryColumn} aria-labelledby="summary-heading">
         <div className={styles.summaryCard}>
-          <h2 className={styles.summaryTitle}>Tóm tắt đơn hàng</h2>
+          <h2 id="summary-heading" className={styles.summaryTitle}>
+            Tóm tắt đơn hàng
+          </h2>
 
-          <div className={styles.summaryRows}>
+          <dl className={styles.summaryRows}>
             <div className={styles.summaryRow}>
-              <span className={styles.summaryLabel}>Tổng số lượng</span>
-              <span className={styles.summaryValue}>{totalItems} món</span>
+              <dt className={styles.summaryLabel}>Tổng số lượng</dt>
+              <dd className={styles.summaryValue}>{totalItems} sản phẩm</dd>
             </div>
 
             <div className={styles.summaryRow}>
-              <span className={styles.summaryLabel}>Tạm tính</span>
-              <span className={styles.summaryValue}>{formatVND(subtotal)}</span>
+              <dt className={styles.summaryLabel}>Tạm tính</dt>
+              <dd className={styles.summaryValue}>{formatVND(subtotal)}</dd>
             </div>
+          </dl>
 
-            <div className={styles.divider} />
+          <div className={styles.divider} />
 
-            <div className={styles.totalRow}>
-              <span className={styles.totalLabel}>Tổng cộng</span>
-              <span className={styles.totalValue}>{formatVND(subtotal)}</span>
-            </div>
+          <div className={styles.totalRow}>
+            <span className={styles.totalLabel}>Tổng cộng</span>
+            <span className={styles.totalValue}>{formatVND(subtotal)}</span>
           </div>
 
-          {/* Checkout CTA */}
           <div className={styles.checkoutActionGroup}>
             {checkoutConfig.isConfigured && checkoutConfig.targetUrl ? (
               <a
@@ -188,9 +217,13 @@ export function CartView() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.checkoutAnchor}
+                aria-label="Đặt hàng qua biểu mẫu (mở tab mới)"
               >
-                <span>Tiến hành thanh toán</span>
-                <ExternalLink className={styles.externalIcon} aria-hidden="true" />
+                <span>Đặt hàng</span>
+                <ExternalLink
+                  className={styles.externalIcon}
+                  aria-hidden="true"
+                />
               </a>
             ) : (
               <button
@@ -198,16 +231,21 @@ export function CartView() {
                 disabled
                 className={styles.checkoutAnchorDisabled}
               >
-                Tiến hành thanh toán
+                Đặt hàng
               </button>
             )}
 
             <p className={styles.checkoutHelper}>
-              Sau khi gửi biểu mẫu, shop sẽ gọi điện thoại xác nhận đơn hàng trước khi giao.
+              Cửa hàng sẽ gọi xác nhận đơn hàng.
             </p>
+
+            <Link href="/san-pham" className={styles.continueLink}>
+              <span>Tiếp tục xem bộ sưu tập</span>
+              <ChevronRight className={styles.chevronIcon} aria-hidden="true" />
+            </Link>
           </div>
         </div>
-      </div>
+      </aside>
     </div>
   );
 }

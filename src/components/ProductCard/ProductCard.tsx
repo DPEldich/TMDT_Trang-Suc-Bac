@@ -1,79 +1,61 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import type { Product } from '../../types/product';
+import { ChevronRight } from 'lucide-react';
+import { getItemTypeLabel, type Product } from '../../types/product';
 import { formatVND } from '../../utils/currency';
 import styles from './ProductCard.module.css';
 
 export interface ProductCardProps {
   product: Product;
+  headingAs?: 'h2' | 'h3';
 }
 
-function getItemTypeLabel(itemType: Product['itemType']): string {
-  switch (itemType) {
-    case 'chain':
-      return 'Dây chuyền trơn';
-    case 'pendant':
-      return 'Mặt dây chuyền';
-    case 'ring':
-      return 'Nhẫn bạc';
-    case 'bracelet':
-      return 'Lắc & Vòng tay';
-    case 'earring':
-      return 'Bông tai';
-    default:
-      return 'Trang sức';
-  }
-}
-
-export function ProductCard({ product }: ProductCardProps) {
+export function ProductCard({ product, headingAs = 'h3' }: ProductCardProps) {
+  const Heading = headingAs;
   const typeLabel = getItemTypeLabel(product.itemType);
+  const isAvailable = product.stock > 0;
 
   return (
     <article className={styles.card}>
-      <Link href={`/san-pham/${product.slug}`} className={styles.imageLink} tabIndex={-1} aria-hidden="true">
-        <div className={styles.imageContainer}>
-          <Image
-            src={product.image}
-            alt={product.imageAlt}
-            width={300}
-            height={300}
-            className={styles.productImage}
-            loading="lazy"
-          />
-        </div>
-      </Link>
+      <div className={styles.mediaStage}>
+        <Image
+          src={product.image}
+          alt={product.imageAlt}
+          width={300}
+          height={300}
+          sizes="(max-width: 36rem) 82vw, (max-width: 60rem) 44vw, 240px"
+          loading="lazy"
+          className={styles.productImage}
+        />
+      </div>
 
-      <div className={styles.details}>
-        <div className={styles.metaRow}>
-          <span className={styles.categoryBadge}>{typeLabel}</span>
-          <span className={styles.skuText}>{product.sku}</span>
-        </div>
+      <div className={styles.body}>
+        <span className={styles.typeLabel}>{typeLabel}</span>
 
-        <h3 className={styles.title}>
+        <Heading className={styles.title}>
           <Link href={`/san-pham/${product.slug}`} className={styles.titleLink}>
             {product.name}
           </Link>
-        </h3>
+        </Heading>
 
-        <p className={styles.shortDesc}>{product.shortDescription}</p>
+        <div className={styles.metaFooter}>
+          <span className={styles.priceValue}>{formatVND(product.price)}</span>
 
-        <div className={styles.bottomRow}>
-          <div className={styles.priceContainer}>
-            <span className={styles.priceLabel}>Giá niêm yết</span>
-            <span className={styles.priceValue}>{formatVND(product.price)}</span>
-          </div>
-
-          <div className={styles.stockContainer}>
+          <span
+            className={styles.stockStatus}
+            data-available={isAvailable ? 'true' : 'false'}
+          >
             <span className={styles.stockDot} aria-hidden="true" />
-            <span className={styles.stockText}>Còn {product.stock} món</span>
-          </div>
+            <span>
+              {isAvailable ? `Còn ${product.stock} sản phẩm` : 'Tạm hết hàng'}
+            </span>
+          </span>
         </div>
 
-        <div className={styles.actionWrapper}>
-          <Link href={`/san-pham/${product.slug}`} className={styles.viewDetailLink}>
-            Xem chi tiết
-          </Link>
-        </div>
+        <span className={styles.detailCue} aria-hidden="true">
+          <span>Xem chi tiết</span>
+          <ChevronRight className={styles.cueIcon} />
+        </span>
       </div>
     </article>
   );

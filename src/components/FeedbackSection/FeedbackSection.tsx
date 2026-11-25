@@ -1,4 +1,4 @@
-import { MessageSquareQuote, Star } from 'lucide-react';
+import { ExternalLink, MessageSquareQuote, Star } from 'lucide-react';
 import { FEEDBACK_FORM_URL } from '../../data/feedback';
 import type { CustomerFeedback } from '../../types/feedback';
 import { LinkButton } from '../UI/Button';
@@ -10,64 +10,96 @@ export interface FeedbackSectionProps {
   loading?: boolean;
 }
 
-export function FeedbackSection({ feedbacks, loading = false }: FeedbackSectionProps) {
+export function FeedbackSection({
+  feedbacks,
+  loading = false,
+}: FeedbackSectionProps) {
   const hasFeedback = feedbacks.length > 0;
 
   return (
     <section className={styles.section} aria-labelledby="feedback-heading">
       <Container>
         <div className={styles.header}>
-          <h2 id="feedback-heading" className={styles.heading}>
-            Đánh giá từ khách hàng
-          </h2>
-          <p className={styles.subheading}>
-            Phản hồi thực tế từ khách mua hàng.
-          </p>
-          <LinkButton href={FEEDBACK_FORM_URL} variant="outline" className={styles.feedbackLink}>
-            Gửi đánh giá
+          <div className={styles.headerCopy}>
+            <h2 id="feedback-heading" className={styles.heading}>
+              Đánh giá từ khách hàng
+            </h2>
+          </div>
+
+          <LinkButton
+            href={FEEDBACK_FORM_URL}
+            variant="outline"
+            size="md"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.feedbackLink}
+          >
+            <span>Gửi đánh giá</span>
+            <ExternalLink className={styles.externalIcon} aria-hidden="true" />
           </LinkButton>
         </div>
 
         {!hasFeedback ? (
-          <div className={styles.emptyCard} role="status">
+          <div
+            className={styles.emptyCard}
+            role="status"
+            aria-busy={loading ? 'true' : undefined}
+          >
             <div className={styles.emptyIconCircle}>
-              <MessageSquareQuote className={styles.emptyIcon} aria-hidden="true" />
+              <MessageSquareQuote
+                className={styles.emptyIcon}
+                aria-hidden="true"
+              />
             </div>
             <h3 className={styles.emptyTitle}>
               {loading ? 'Đang tải đánh giá' : 'Chưa có đánh giá nào'}
             </h3>
-            <p className={styles.emptyDesc}>
-              {loading ? 'Đang lấy phản hồi mới nhất.' : 'Phản hồi từ Google Form sẽ hiển thị tại đây.'}
-            </p>
           </div>
         ) : (
-          <div className={styles.feedbackGrid}>
-            {feedbacks.map((fb) => (
-              <article key={fb.id} className={styles.reviewCard}>
-                {fb.rating !== undefined && (
-                  <div className={styles.starRow} role="img" aria-label={`Đánh giá ${fb.rating} trên 5 sao`}>
-                    {Array.from({ length: 5 }, (_, i) => (
+          <div
+            className={styles.feedbackGrid}
+            data-count={feedbacks.length === 1 ? 'single' : 'multiple'}
+          >
+            {feedbacks.map((feedback) => (
+              <article key={feedback.id} className={styles.reviewCard}>
+                {feedback.rating !== undefined && (
+                  <div
+                    className={styles.starRow}
+                    role="img"
+                    aria-label={`Đánh giá ${feedback.rating} trên 5 sao`}
+                  >
+                    {Array.from({ length: 5 }, (_, index) => (
                       <Star
-                        key={i}
+                        key={index}
                         className={styles.starIcon}
-                        data-filled={i < (fb.rating ?? 0)}
+                        data-filled={index < (feedback.rating ?? 0) ? 'true' : 'false'}
                         aria-hidden="true"
                       />
                     ))}
                   </div>
                 )}
 
-                <p className={styles.reviewContent}>&ldquo;{fb.content}&rdquo;</p>
+                <p className={styles.reviewContent}>
+                  &ldquo;{feedback.content}&rdquo;
+                </p>
 
                 <div className={styles.reviewAuthor}>
-                  <strong className={styles.authorName}>{fb.authorName}</strong>
-                  {fb.location && (
-                    <span className={styles.authorLocation}> • {fb.location}</span>
+                  <strong className={styles.authorName}>
+                    {feedback.authorName}
+                  </strong>
+                  {feedback.location && (
+                    <span className={styles.authorMeta}>
+                      · {feedback.location}
+                    </span>
                   )}
-                  {fb.productName && (
-                    <span className={styles.authorProduct}>Sản phẩm: {fb.productName}</span>
+                  {feedback.productName && (
+                    <span className={styles.authorProduct}>
+                      Sản phẩm: {feedback.productName}
+                    </span>
                   )}
-                  {fb.date && <span className={styles.authorDate}>{fb.date}</span>}
+                  {feedback.date && (
+                    <span className={styles.authorDate}>{feedback.date}</span>
+                  )}
                 </div>
               </article>
             ))}

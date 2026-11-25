@@ -5,28 +5,29 @@ import { CartView } from '../../components/CartView';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
-  title: 'Giỏ hàng của bạn | NFA Jewelry',
+  title: 'Giỏ hàng | NFA',
   description:
-    'Quản lý số lượng món trang sức bạc NFA, xem trước đơn giá và tiến hành đặt hàng thông qua biểu mẫu Google Forms.',
+    'Kiểm tra số lượng trang sức bạc NFA, xem tạm tính và gửi thông tin đặt hàng qua biểu mẫu Google Form.',
 };
 
 export default function CartPage() {
   return (
-    <main className={styles.main}>
+    <main id="main-content" className={styles.main}>
       <div className={styles.pageHeader}>
         <Container>
           <nav className={styles.breadcrumbs} aria-label="Đường dẫn điều hướng">
             <Link href="/" className={styles.crumbLink}>
               Trang chủ
             </Link>
-            <span className={styles.crumbSeparator}>/</span>
-            <span className={styles.crumbCurrent}>Giỏ hàng</span>
+            <span className={styles.crumbSeparator} aria-hidden="true">
+              /
+            </span>
+            <span className={styles.crumbCurrent} aria-current="page">
+              Giỏ hàng
+            </span>
           </nav>
 
           <h1 className={styles.pageTitle}>Giỏ hàng</h1>
-          <p className={styles.pageDescription}>
-            Kiểm tra lại số lượng các món trang sức bạc đã chọn trước khi tiến hành thanh toán qua biểu mẫu đơn hàng.
-          </p>
         </Container>
       </div>
 

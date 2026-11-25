@@ -1,0 +1,168 @@
+.desktopNav {
+  display: none;
+  align-items: center;
+  gap: var(--space-lg);
+}
+
+.navLink {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-target);
+  padding: 0 var(--space-3xs);
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+  font-size: var(--text-small);
+  font-weight: var(--font-weight-5);
+  color: var(--text-secondary);
+  text-decoration: none;
+  cursor: pointer;
+  transition: color var(--transition-fast);
+}
+
+.megaLayer {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-header) - 1);
+}
+
+.backdrop {
+  position: absolute;
+  inset: var(--layout-header-height) 0 0;
+  background-color: var(--bg-navigation-backdrop);
+  -webkit-backdrop-filter: blur(var(--blur-navigation-backdrop));
+  backdrop-filter: blur(var(--blur-navigation-backdrop));
+  animation: revealBackdrop var(--transition-normal) both;
+}
+
+.megaPanel {
+  position: absolute;
+  top: var(--layout-header-height);
+  left: 0;
+  right: 0;
+  max-height: calc(100dvh - var(--layout-header-height));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background-color: var(--bg-canvas);
+  padding-top: var(--space-xl);
+  padding-bottom: var(--space-3xl);
+  animation: revealPanel var(--transition-normal) both;
+}
+
+.menuGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) repeat(2, minmax(0, 1fr));
+  gap: var(--space-lg);
+}
+
+.menuColumn {
+  min-width: 0;
+}
+
+.groupLabel {
+  margin-bottom: var(--space-sm);
+  font-size: var(--text-small);
+  font-weight: var(--font-weight-4);
+  color: var(--text-secondary);
+}
+
+.primaryLinks,
+.secondaryLinks {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.primaryLinks a,
+.secondaryLinks a {
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  max-width: 100%;
+  min-height: var(--tap-target);
+  color: var(--text-primary);
+  line-height: var(--leading-snug);
+  transition: color var(--transition-fast);
+}
+
+.primaryLinks a {
+  padding-block: var(--space-3xs);
+  font-size: var(--text-section);
+  font-weight: var(--font-weight-6);
+  letter-spacing: var(--tracking-heading);
+}
+
+.secondaryLinks a {
+  font-size: var(--text-body);
+  font-weight: var(--font-weight-6);
+}
+
+@keyframes revealPanel {
+  from {
+    opacity: 0;
+    transform: translateY(calc(var(--space-2xs) * -1));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes revealBackdrop {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .primaryLinks a:hover,
+  .secondaryLinks a:hover {
+    color: var(--text-secondary);
+  }
+}
+
+@media (min-width: 64rem) {
+  .menuGrid {
+    gap: var(--space-2xl);
+  }
+}
+
+@media (max-width: 47.999rem) {
+  .megaLayer {
+    display: none;
+  }
+}
+
+.navLink::after {
+  content: '';
+  position: absolute;
+  left: var(--space-3xs);
+  right: var(--space-3xs);
+  bottom: var(--space-2xs);
+  height: var(--border-size-2);
+  border-radius: var(--radius-full);
+  background-color: var(--text-primary);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform var(--transition-fast);
+}
+
+.navLink[data-active='true'] {
+  color: var(--text-primary);
+}
+
+.navLink[data-active='true']::after {
+  transform: scaleX(1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .navLink:hover {
+    color: var(--text-primary);
+  }
+}
+
+@media (min-width: 48rem) {
+  .desktopNav {
+    display: flex;
+  }
+}

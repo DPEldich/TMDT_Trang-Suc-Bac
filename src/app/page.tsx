@@ -1,17 +1,37 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { Suspense } from 'react';
+import { ChevronRight } from 'lucide-react';
 import { Hero } from '../components/Hero';
 import { Container } from '../components/UI/Container';
 import { ProductCard } from '../components/ProductCard';
 import { FeedbackSection } from '../components/FeedbackSection';
-import { LinkButton } from '../components/UI/Button';
 import { getFeaturedProducts, getAllProducts } from '../data/products';
 import { getSheetFeedback } from '../data/sheetFeedback';
-import { CATEGORIES } from '../types/product';
+import { CATEGORIES, type Product, type ProductCategory } from '../types/product';
 import styles from './page.module.css';
 
 async function LiveFeedback() {
   return <FeedbackSection feedbacks={await getSheetFeedback()} />;
+}
+
+const CATEGORY_PREVIEW_IDS: Record<ProductCategory, string> = {
+  nhan: 'prod-01',
+  'day-chuyen': 'prod-04',
+  'lac-tay': 'prod-06',
+  'bong-tai': 'prod-08',
+  'lac-chan': 'prod-51',
+};
+
+function getCategoryPreviewProduct(
+  categoryId: ProductCategory,
+  products: readonly Product[]
+): Product | undefined {
+  const preferredId = CATEGORY_PREVIEW_IDS[categoryId];
+  return (
+    products.find((product) => product.id === preferredId) ??
+    products.find((product) => product.category === categoryId)
+  );
 }
 
 export default function HomePage() {
@@ -20,104 +40,78 @@ export default function HomePage() {
   const displayHighlights = featured.length > 0 ? featured : allProducts.slice(0, 4);
 
   return (
-    <main className={styles.main}>
-      {/* 1. Hero Section */}
+    <main id="main-content" className={styles.main}>
+      {/* 1. Centered Product-Led Hero */}
       <Hero />
 
-      {/* 2. Featured Jewelry Collection */}
-      <section className={styles.section} aria-labelledby="featured-heading">
+      {/* 2. Featured Products */}
+      <section className={styles.featuredSection} aria-labelledby="featured-heading">
         <Container>
           <div className={styles.sectionHeader}>
-            <div className={styles.headerLeft}>
-              <span className={styles.sectionSubtitle}>Sản phẩm</span>
-              <h2 id="featured-heading" className={styles.sectionTitle}>
-                Một số mẫu nổi bật
-              </h2>
-            </div>
-            <LinkButton href="/san-pham" variant="outline" size="md">
-              Xem toàn bộ sản phẩm →
-            </LinkButton>
+            <h2 id="featured-heading" className={styles.sectionTitle}>
+              Mẫu nổi bật
+            </h2>
+            <Link href="/san-pham" className={styles.sectionActionLink}>
+              <span>Xem tất cả</span>
+              <ChevronRight className={styles.actionChevron} aria-hidden="true" />
+            </Link>
           </div>
 
           <div className={styles.productGrid}>
             {displayHighlights.map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCard key={product.id} product={product} headingAs="h3" />
             ))}
           </div>
         </Container>
       </section>
 
-      {/* 3. Category Explorations */}
+      {/* 3. Image-Led Categories */}
       <section className={styles.categorySection} aria-labelledby="categories-heading">
         <Container>
-          <div className={styles.centerHeader}>
-            <span className={styles.sectionSubtitle}>Phân loại</span>
+          <div className={styles.sectionHeader}>
             <h2 id="categories-heading" className={styles.sectionTitle}>
-              Danh mục sản phẩm
+              Danh mục
             </h2>
-            <p className={styles.headerDesc}>
-              Bao gồm nhẫn, dây chuyền trơn, mặt dây chuyền, lắc tay và bông tai.
-            </p>
           </div>
 
           <div className={styles.categoryGrid}>
-            {CATEGORIES.map((cat) => (
-              <Link
-                key={cat.id}
-                href="/san-pham"
-                className={styles.categoryCard}
-              >
-                <div className={styles.categoryCardHeader}>
-                  <h3 className={styles.categoryCardTitle}>{cat.name}</h3>
-                  <span className={styles.categoryArrow}>→</span>
-                </div>
-                <p className={styles.categoryCardDesc}>{cat.description}</p>
-                <span className={styles.categoryExploreText}>Xem danh mục</span>
-              </Link>
-            ))}
+            {CATEGORIES.map((category) => {
+              const previewProduct = getCategoryPreviewProduct(category.id, allProducts);
+
+              return (
+                <Link
+                  key={category.id}
+                  href={`/san-pham?category=${category.id}`}
+                  className={styles.categoryTile}
+                >
+                  <div className={styles.categoryCopy}>
+                    <h3 className={styles.categoryTitle}>{category.name}</h3>
+                    <span className={styles.categoryAction}>
+                      <span>Xem danh mục</span>
+                      <ChevronRight className={styles.actionChevron} aria-hidden="true" />
+                    </span>
+                  </div>
+
+                  {previewProduct && (
+                    <div className={styles.categoryMedia}>
+                      <Image
+                        src={previewProduct.image}
+                        alt={previewProduct.imageAlt}
+                        width={300}
+                        height={300}
+                        sizes="(max-width: 48rem) 144px, 176px"
+                        loading="lazy"
+                        className={styles.categoryImage}
+                      />
+                    </div>
+                  )}
+                </Link>
+              );
+            })}
           </div>
         </Container>
       </section>
 
-      {/* 4. Storefront Principles */}
-      <section className={styles.valuesSection} aria-labelledby="values-heading">
-        <Container>
-          <div className={styles.centerHeader}>
-            <span className={styles.sectionSubtitle}>Thông tin</span>
-            <h2 id="values-heading" className={styles.sectionTitle}>
-              Nguyên tắc hiển thị thông tin
-            </h2>
-          </div>
-
-          <div className={styles.valuesGrid}>
-            <div className={styles.valueCard}>
-              <span className={styles.valueNumber}>01</span>
-              <h3 className={styles.valueTitle}>Ảnh chụp thực tế</h3>
-              <p className={styles.valueDesc}>
-                Hình ảnh sản phẩm hiển thị đúng theo ảnh chụp các mẫu trang sức có sẵn, không sử dụng ảnh minh họa dựng 3D.
-              </p>
-            </div>
-
-            <div className={styles.valueCard}>
-              <span className={styles.valueNumber}>02</span>
-              <h3 className={styles.valueTitle}>Phân định chủng loại rõ ràng</h3>
-              <p className={styles.valueDesc}>
-                Ghi chú rõ ràng giữa sợi dây chuyền trơn (không kèm mặt) và mặt dây chuyền độc lập (không kèm dây).
-              </p>
-            </div>
-
-            <div className={styles.valueCard}>
-              <span className={styles.valueNumber}>03</span>
-              <h3 className={styles.valueTitle}>Quy trình xác nhận đơn</h3>
-              <p className={styles.valueDesc}>
-                Khách hàng gửi thông tin qua biểu mẫu và cửa hàng sẽ liên hệ điện thoại xác nhận trước khi giao.
-              </p>
-            </div>
-          </div>
-        </Container>
-      </section>
-
-      {/* 5. Feedback Section */}
       <Suspense fallback={<FeedbackSection feedbacks={[]} loading />}>
         <LiveFeedback />
       </Suspense>

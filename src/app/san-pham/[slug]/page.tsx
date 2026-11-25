@@ -2,11 +2,16 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { Sparkles } from 'lucide-react';
+import { Info } from 'lucide-react';
 import { Container } from '../../../components/UI/Container';
 import { ProductCard } from '../../../components/ProductCard';
 import { AddToCartForm } from '../../../components/AddToCartForm';
 import { getAllProducts, getProductBySlug } from '../../../data/products';
+import {
+  CATEGORIES,
+  getItemTypeLabel,
+  getSeparationNotice,
+} from '../../../types/product';
 import { formatVND } from '../../../utils/currency';
 import styles from './page.module.css';
 
@@ -23,23 +28,27 @@ export async function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({ params }: ProductDetailPageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: ProductDetailPageProps): Promise<Metadata> {
   const { slug } = await params;
   const product = getProductBySlug(slug);
 
   if (!product) {
     return {
-      title: 'Không tìm thấy sản phẩm | NFA Jewelry',
+      title: 'Không tìm thấy sản phẩm | NFA',
     };
   }
 
   return {
-    title: `${product.name} | NFA Jewelry`,
+    title: `${product.name} | NFA`,
     description: product.shortDescription,
   };
 }
 
-export default async function ProductDetailPage({ params }: ProductDetailPageProps) {
+export default async function ProductDetailPage({
+  params,
+}: ProductDetailPageProps) {
   const { slug } = await params;
   const product = getProductBySlug(slug);
 
@@ -49,98 +58,106 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 
   const allProducts = getAllProducts();
   const relatedProducts = allProducts
-    .filter((p) => p.id !== product.id)
+    .filter((item) => item.id !== product.id)
     .slice(0, 4);
-
-  const getItemTypeBadge = () => {
-    switch (product.itemType) {
-      case 'chain':
-        return 'Sợi dây chuyền trơn (Không kèm mặt)';
-      case 'pendant':
-        return 'Mặt dây chuyền (Không kèm dây)';
-      case 'ring':
-        return 'Nhẫn bạc';
-      case 'bracelet':
-        return 'Lắc & Vòng tay bạc';
-      case 'earring':
-        return 'Bông tai bạc';
-    }
-  };
+  const categoryInfo = CATEGORIES.find((item) => item.id === product.category);
+  const typeLabel = getItemTypeLabel(product.itemType);
+  const separationNotice = getSeparationNotice(product.itemType);
 
   return (
-    <main className={styles.main}>
+    <main id="main-content" className={styles.main}>
       <Container>
-        {/* Breadcrumbs */}
         <nav className={styles.breadcrumbs} aria-label="Đường dẫn điều hướng">
           <Link href="/" className={styles.crumbLink}>
             Trang chủ
           </Link>
-          <span className={styles.crumbSeparator}>/</span>
+          <span className={styles.crumbSeparator} aria-hidden="true">
+            /
+          </span>
           <Link href="/san-pham" className={styles.crumbLink}>
             Bộ sưu tập
           </Link>
-          <span className={styles.crumbSeparator}>/</span>
-          <span className={styles.crumbCurrent}>{product.name}</span>
+          {categoryInfo && (
+            <>
+              <span className={styles.crumbSeparator} aria-hidden="true">
+                /
+              </span>
+              <Link
+                href={`/san-pham?category=${categoryInfo.id}`}
+                className={styles.crumbLink}
+              >
+                {categoryInfo.name}
+              </Link>
+            </>
+          )}
+          <span className={styles.crumbSeparator} aria-hidden="true">
+            /
+          </span>
+          <span className={styles.crumbCurrent} aria-current="page">
+            {product.name}
+          </span>
         </nav>
 
-        {/* Product Hero Grid */}
         <div className={styles.productLayout}>
-          {/* Gallery / Image Col */}
+          {/* Dominant Minimal Studio Image Stage */}
           <div className={styles.galleryColumn}>
-            <div className={styles.mainImageCard}>
-              <div className={styles.imageInner}>
-                <Image
-                  src={product.image}
-                  alt={product.imageAlt}
-                  width={500}
-                  height={500}
-                  priority
-                  className={styles.productImage}
-                />
-              </div>
-              <div className={styles.realPhotoTag}>
-                <Sparkles className={styles.sparkleIcon} aria-hidden="true" />
-                <span>Ảnh chụp thực tế</span>
-              </div>
+            <div className={styles.imageStage}>
+              <Image
+                src={product.image}
+                alt={product.imageAlt}
+                width={300}
+                height={300}
+                preload
+                sizes="(max-width: 52rem) 280px, 300px"
+                className={styles.productImage}
+              />
+              <span className={styles.floorShadow} aria-hidden="true" />
             </div>
           </div>
 
-          {/* Details & Purchase Col */}
+          {/* Clear Product Info & Purchase Column */}
           <div className={styles.detailsColumn}>
-            <div className={styles.itemHeader}>
-              <span className={styles.typeBadge}>{getItemTypeBadge()}</span>
-              <span className={styles.skuText}>SKU: {product.sku}</span>
+            <div className={styles.titleBlock}>
+              <span className={styles.typeLabel}>{typeLabel}</span>
+              <h1 className={styles.productTitle}>{product.name}</h1>
+              <p className={styles.priceValue}>{formatVND(product.price)}</p>
             </div>
 
-            <h1 className={styles.productTitle}>{product.name}</h1>
-
-            <div className={styles.priceContainer}>
-              <span className={styles.priceValue}>{formatVND(product.price)}</span>
-            </div>
-
-            <div className={styles.divider} />
+            {separationNotice && (
+              <div className={styles.separationCallout} role="note">
+                <Info className={styles.calloutIcon} aria-hidden="true" />
+                <p className={styles.calloutText}>{separationNotice}</p>
+              </div>
+            )}
 
             <p className={styles.leadDescription}>{product.description}</p>
 
-            {/* Interactive AddToCart Boundary */}
-            <div className={styles.purchaseSection}>
+            <div className={styles.purchaseArea}>
               <AddToCartForm product={product} />
             </div>
+
+            <dl className={styles.specList}>
+              <div className={styles.specRow}>
+                <dt className={styles.specTerm}>Mã sản phẩm</dt>
+                <dd className={styles.specMono}>{product.sku}</dd>
+              </div>
+            </dl>
           </div>
         </div>
 
-        {/* Related Products */}
-        <section className={styles.relatedSection} aria-labelledby="related-heading">
+        <section
+          className={styles.relatedSection}
+          aria-labelledby="related-heading"
+        >
           <div className={styles.relatedHeader}>
-            <span className={styles.relatedSubtitle}>Gợi ý</span>
             <h2 id="related-heading" className={styles.relatedTitle}>
               Sản phẩm khác trong bộ sưu tập
             </h2>
           </div>
 
           <div className={styles.relatedGrid}>
-            {relatedProducts.map((p) => (
-              <ProductCard key={p.id} product={p} />
+            {relatedProducts.map((related) => (
+              <ProductCard key={related.id} product={related} headingAs="h3" />
             ))}
           </div>
         </section>
