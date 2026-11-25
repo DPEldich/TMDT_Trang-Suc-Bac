@@ -3,6 +3,31 @@
   padding-bottom: var(--space-3xl);
 }
 
+.backBar {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--space-md);
+}
+
+.backLink {
+  max-width: 100%;
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.backIcon {
+  width: var(--icon-sm);
+  height: var(--icon-sm);
+  flex-shrink: 0;
+  transition: transform var(--transition-fast);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .backLink:hover .backIcon {
+    transform: translateX(calc(var(--nudge-arrow) * -1));
+  }
+}
+
 .productLayout {
   display: grid;
   grid-template-columns: 1fr;

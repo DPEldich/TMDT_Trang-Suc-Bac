@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { Info } from 'lucide-react';
+import { ArrowLeft, Info } from 'lucide-react';
+import { LinkButton } from '../../../components/UI/Button';
 import { Container } from '../../../components/UI/Container';
 import { ProductCard } from '../../../components/ProductCard';
 import { AddToCartForm } from '../../../components/AddToCartForm';
@@ -64,6 +65,18 @@ export default async function ProductDetailPage({
   return (
     <main id="main-content" className={styles.main}>
       <Container>
+        <div className={styles.backBar}>
+          <LinkButton
+            href="/san-pham"
+            variant="secondary"
+            size="sm"
+            className={styles.backLink}
+          >
+            <ArrowLeft className={styles.backIcon} aria-hidden="true" />
+            <span>Trở về sản phẩm</span>
+          </LinkButton>
+        </div>
+
         <div className={styles.productLayout}>
           {/* Dominant Minimal Studio Image Stage */}
           <div className={styles.galleryColumn}>

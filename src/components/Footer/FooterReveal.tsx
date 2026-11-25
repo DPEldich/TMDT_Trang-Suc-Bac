@@ -20,6 +20,7 @@ const DEFAULT_HEADER_HEIGHT_PX = 56;
 const FIT_EPSILON_PX = 1;
 const PROGRESS_EDGE_EPSILON = 0.001;
 const MIN_SCROLLABLE_RANGE_PX = 1;
+const HIDDEN_FOOTER_PATHNAMES = new Set(['/san-pham', '/ve-chung-toi', '/gio-hang']);
 
 function subscribeReducedMotion(onStoreChange: () => void): () => void {
   if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
@@ -226,6 +227,15 @@ export function FooterReveal({
       delete footer.dataset.state;
     };
   }, [prefersReducedMotion, pathname]);
+
+  const normalizedPathname =
+    pathname.length > 1 && pathname.endsWith('/')
+      ? pathname.slice(0, -1)
+      : pathname;
+
+  if (HIDDEN_FOOTER_PATHNAMES.has(normalizedPathname)) {
+    return null;
+  }
 
   return (
     <footer

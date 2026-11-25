@@ -6,6 +6,7 @@ import { CurtainLink } from './NavigationCurtain';
 import { usePathname } from 'next/navigation';
 import { Menu, X, ChevronRight } from 'lucide-react';
 import { CATEGORIES } from '../../types/product';
+import { extractHomeSectionId, HOME_SECTION_LINKS } from './homeNavigation';
 import styles from './MobileNav.module.css';
 
 interface NavItem {
@@ -45,6 +46,19 @@ export function MobileNav() {
     setOpenPath(pathname);
     setStatusMessage('Đã mở menu điều hướng');
   }, [pathname]);
+
+  const handleSectionClick = useCallback(
+    (href: string) => {
+      const sectionId = extractHomeSectionId(href);
+      closeMenu(false);
+      if (pathname === '/' && sectionId) {
+        requestAnimationFrame(() => {
+          document.getElementById(sectionId)?.scrollIntoView();
+        });
+      }
+    },
+    [closeMenu, pathname]
+  );
 
   // Manage body scroll lock, focus entry, focus trap, Escape key, and desktop resize
   useEffect(() => {
@@ -148,6 +162,22 @@ export function MobileNav() {
             );
           })}
         </nav>
+
+        <div className={styles.categoryGroup}>
+          <p className={styles.groupLabel}>Khám phá trang chủ</p>
+          <div className={styles.categoryLinks}>
+            {HOME_SECTION_LINKS.map((section) => (
+              <CurtainLink
+                key={section.id}
+                href={section.href}
+                className={styles.categoryLink}
+                onClick={() => handleSectionClick(section.href)}
+              >
+                {section.label}
+              </CurtainLink>
+            ))}
+          </div>
+        </div>
 
         <div className={styles.categoryGroup}>
           <p className={styles.groupLabel}>Danh mục sản phẩm</p>
